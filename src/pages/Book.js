@@ -21,7 +21,7 @@ const Book = (props) => (
             Baixar
           </button>
           <Link to="#" className="flex items-center justify-center w-12 h-12">
-            <span className="bg-slate-200 rounded-md p-2 hover:bg-slate-400 text-xl">
+            <span className="bg-slate-200 rounded-md p-3 hover:bg-slate-400 text-xl flex justify-center">
               <ion-icon name="heart"></ion-icon>
             </span>
           </Link>

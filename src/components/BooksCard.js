@@ -19,8 +19,8 @@ const BooksCard = (props) => (
       <button className="bg-slate-200 text-black px-4 sm:px-6 py-2 rounded-md hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 text-sm">
         Baixar
       </button>
-      <Link className="pt-1" to="/favorites">
-        <span className="bg-slate-200 rounded-md p-2 hover:bg-slate-400 text-xl">
+      <Link to="/favorites">
+        <span className="bg-slate-200 rounded-md p-2 hover:bg-slate-400 text-xl flex justify-center">
           <ion-icon name="heart"></ion-icon>
         </span>
       </Link>
