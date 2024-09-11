@@ -62,7 +62,9 @@ const Login = () => (
             name="logo-google"
             className="w-5 h-5 mr-2 text-white"
           ></ion-icon>
-          Entrar com o Google
+          <span className="ml-2">
+            Entrar com o Google
+          </span>
         </button>
       </div>
     </div>
