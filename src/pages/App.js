@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from "react";
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [books, setBooks] = useState([]);
   const intervalTime = 5000;
   const totalSlides = 3;
 
@@ -23,6 +24,17 @@ function App() {
   function goToSlide(slide) {
     setCurrentSlide(slide);
   }
+
+  async function fetchBooks() {
+    const response = await fetch("http://localhost:3333/books");
+    const books = await response.json();
+    
+    setBooks(books);
+  }
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -88,12 +100,13 @@ function App() {
         <Nav />
         <section className="pt-10 p-5">
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-5">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((index) => (
+            {books.map((book) => (
               <BooksCard
-                key={index}
-                image={star}
-                hoverImage={starwars}
-                title="Trilogia Star Wars"
+                key={book.id}
+                bookId={book.id}
+                image={book.image_1}
+                hoverImage={book.image_2}
+                title={book.book_name}
               />
             ))}
           </div>

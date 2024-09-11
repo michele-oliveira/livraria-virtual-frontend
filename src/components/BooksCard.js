@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const BooksCard = (props) => (
   <div className="relative border p-4 text-center group bg-white rounded-md">
-    <Link to="/book">
+    <Link to={`/book/${props.bookId}`}>
       <img
         className="w-24 sm:w-32 md:w-44 block mx-auto transition-opacity duration-300 ease-in-out group-hover:opacity-0"
         src={props.image}
