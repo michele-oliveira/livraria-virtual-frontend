@@ -1,16 +1,15 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
-import star from "../assets/images/livrostar.jpg";
-import { useEffect, useState } from "react";
 
 const Book = (props) => {
   const [book, setBook] = useState();
   const params = useParams();
 
   async function fetchBook(bookId) {
-    const response = await fetch(`http://localhost:3333/books/${bookId}`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books/${bookId}`);
     const book = await response.json();
     setBook(book);
   }
@@ -31,8 +30,8 @@ const Book = (props) => {
         <div className="flex-shrink-0 relative p-5">
           <img
             className="w-56 sm:w-64 md:w-72 rounded-lg shadow-md transition-opacity duration-300 ease-in-out group-hover:opacity-80"
-            src={star}
-            alt="Star Wars Trilogia"
+            src={book.image_1}
+            alt={`Contains the book cover of ${book.book_name}`}
           />
 
           <div className="w-full flex justify-center gap-2 p-5">
@@ -48,7 +47,7 @@ const Book = (props) => {
         </div>
         <div className="flex flex-col justify-center ml-4 mt-4 bg-white border p-10 rounded-lg">
           <h1 className="text-2xl font-bold text-gray-800 pb-5">
-            STAR WARS A TRILOGIA
+            {book.book_name.toUpperCase()}
           </h1>
           <p className="text-gray-500">Editora: {book.publisher}</p>
           <p className="text-gray-500">Idioma: {book.language}</p>

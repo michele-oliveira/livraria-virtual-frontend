@@ -1,14 +1,12 @@
+import { useCallback, useEffect, useState } from "react";
 import Header from "../components/Header.js";
+import Nav from "../components/Nav.js";
+import BooksCard from "../components/BooksCard.js";
+import Footer from "../components/Footer.js";
+
 import card from "../assets/images/car1.png";
 import card2 from "../assets/images/card2.png";
 import card3 from "../assets/images/card3.png";
-import Nav from "../components/Nav.js";
-import { Link } from "react-router-dom";
-import star from "../assets/images/livrostar.jpg";
-import starwars from "../assets/images/livrostarwars.png";
-import BooksCard from "../components/BooksCard.js";
-import Footer from "../components/Footer.js";
-import { useCallback, useEffect, useState } from "react";
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -26,7 +24,7 @@ function App() {
   }
 
   async function fetchBooks() {
-    const response = await fetch("http://localhost:3333/books");
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books`);
     const books = await response.json();
     
     setBooks(books);
