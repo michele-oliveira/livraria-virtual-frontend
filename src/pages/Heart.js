@@ -46,12 +46,20 @@ const Heart = () => {
     } catch (error) {
       console.error(error);
       if (error instanceof UnauthorizedError) {
-        alert(
-          "Acesso não permitido. Por favor, faça o login antes de acessar esta página"
-        );
+        toast({
+          title: "Acesso não permitido",
+          description: "Por favor, faça o login antes de acessar esta página",
+          type: "error",
+          duration: 2500,
+        });
         navigate("/login");
       } else {
-        alert("Houve um erro inesperado durante a sincronização dos dados");
+        toast({
+          title: "Erro inesperado",
+          description: "Houve um erro durante a sincronização de dados",
+          type: "error",
+          duration: 2500,
+        });
         emptyFavoriteBooks();
       }
     }

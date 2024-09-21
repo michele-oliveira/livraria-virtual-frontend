@@ -2,6 +2,7 @@ import { useState } from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
+import toast from "../components/react-stacked-toast";
 
 const AdminPage = () => {
   const [bookForm, setBookForm] = useState({
@@ -30,9 +31,17 @@ const AdminPage = () => {
       if (bookForm.image) formData.append("image", bookForm.image);
       if (bookForm.file) formData.append("file", bookForm.file);
 
-      alert("Livro enviado com sucesso!");
+      toast({
+        title: "Livro registrado com sucesso",
+        type: "success",
+        duration: 2000,
+      });
     } catch (error) {
-      alert("Erro ao enviar dados do livro");
+      toast({
+        title: "Erro inesperado",
+        description: "Houve um erro ao enviar as informações do livro",
+        duration: 2500,
+      });
     }
   };
 

@@ -7,6 +7,8 @@ import Footer from "../components/Footer.js";
 import card from "../assets/images/car1.png";
 import card2 from "../assets/images/card2.png";
 import card3 from "../assets/images/card3.png";
+import { getBooks } from "../api/books/books.api.js";
+import toast from "../components/react-stacked-toast/index.js";
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -23,12 +25,20 @@ function App() {
     setCurrentSlide(slide);
   }
 
-  async function fetchBooks() {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books`);
-    const books = await response.json();
-    
-    setBooks(books);
-  }
+  const fetchBooks = async () => {
+    try {
+      const books = await getBooks();
+      setBooks(books);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Erro inesperado",
+        description: "Houve um erro durante a sincronização de dados",
+        type: "error",
+        duration: 2500,
+      })
+    }
+  };
 
   useEffect(() => {
     fetchBooks();

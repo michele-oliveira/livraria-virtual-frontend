@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Nav from "../components/Nav";
 import { login, registerUser } from "../api/users/users.api";
 import { useNavigate } from "react-router-dom";
+import toast from "../components/react-stacked-toast";
 
 const Login = () => {
   const [loginForm, setLoginForm] = useState();
@@ -26,7 +27,12 @@ const Login = () => {
       localStorage.setItem("accessToken", token.accessToken);
       navigate("/")
     } catch (error) {
-      alert("Usuário e/ou senha incorreto(s)")
+      toast({
+        title: "Usário e/ou senha incorreto(s)",
+        description: "Por favor, redigite as credenciais e tente novamente",
+        type: "error",
+        duration: 2500,
+      });
     }
   }
 
@@ -34,9 +40,18 @@ const Login = () => {
     e.preventDefault()
     try {
       await registerUser(registerForm);
-      alert("Usuário criado com sucesso!");
+      toast({
+        title: "Usuário registrado com sucesso",
+        type: "success",
+        duration: 2000,
+      });
     } catch (error) {
-      alert("Erro ao criar usuário")
+      toast({
+        title: "Erro ao registrar usuário",
+        description: "Por favor, tente um e-mail diferente",
+        type: "error",
+        duration: 2500,
+      });
     }
   }
 
