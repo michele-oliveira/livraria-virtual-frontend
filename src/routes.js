@@ -4,6 +4,7 @@ import Form from "./pages/Form";
 import Heart from "./pages/Heart";
 import Login from "./pages/Login";
 import Book from "./pages/Book";
+import AdminPage from "./pages/AdminPage";
 
 const router = createBrowserRouter([
     {
@@ -26,6 +27,11 @@ const router = createBrowserRouter([
         path: "/book/:bookId",
         element: <Book/>,
     },
+    {
+        path: "/admin",
+        element: <AdminPage/>,
+    },
+
 ]);
 
 export default router;

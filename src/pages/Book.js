@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
 
-const Book = (props) => {
+const Book = () => {
   const [book, setBook] = useState();
   const params = useParams();
 
