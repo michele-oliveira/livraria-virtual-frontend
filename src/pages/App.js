@@ -17,10 +17,12 @@ import UnauthorizedError from "../errors/http/UnauthorizedError.js";
 import card from "../assets/images/car1.png";
 import card2 from "../assets/images/card2.png";
 import card3 from "../assets/images/card3.png";
+import List from "../components/List.js";
+import Loading from "../components/Loading.js";
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState();
   const [favoriteBooks, setFavoriteBooks] = useState([]);
 
   const navigate = useNavigate();
@@ -46,6 +48,7 @@ function App() {
       setBooks(books);
     } catch (error) {
       console.error(error);
+      setBooks([]);
       toast({
         title: "Erro inesperado",
         description: "Houve um erro durante a sincronização dos livros",
@@ -214,19 +217,39 @@ function App() {
         </div>
         <Nav />
         <section className="pt-10 p-5">
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-5">
-            {books.map((book) => (
-              <BooksCard
-                key={book.id}
-                bookId={book.id}
-                image={book.image_1}
-                hoverImage={book.image_2}
-                title={book.book_name}
-                isFavorite={favoriteBooks.includes(book.id)}
-                onClickHeart={() => handleClickHeartButton(book.id)}
-              />
-            ))}
-          </div>
+          {books ? (
+            <List
+              data={books}
+              component={
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-5">
+                  {books.map((book) => (
+                    <BooksCard
+                      key={book.id}
+                      bookId={book.id}
+                      image={book.image_1}
+                      hoverImage={book.image_2}
+                      title={book.book_name}
+                      isFavorite={favoriteBooks.includes(book.id)}
+                      onClickHeart={() => handleClickHeartButton(book.id)}
+                    />
+                  ))}
+                </div>
+              }
+              emptyComponent={
+                <div className="border rounded-lg m-5 p-5 flex flex-col justify-center items-center bg-white ">
+                  <p className="text-gray-800 font-bold">
+                    Nenhum livro encontrado
+                  </p>
+                  <p className="mt-5 text-gray-900 text-sm">
+                    A busca não retornou nenhum livro. Se você acha que isto
+                    pode ser um erro de sistema, por favor, contate o suporte.
+                  </p>
+                </div>
+              }
+            />
+          ) : (
+            <Loading text="Carregando livros..." />
+          )}
         </section>
       </div>
 
