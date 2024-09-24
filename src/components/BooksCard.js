@@ -1,40 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
-import toast from "./react-stacked-toast";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import UnauthorizedError from "../errors/http/UnauthorizedError";
-import { addBookToFavorites } from "../api/users/users.api";
 
 const BooksCard = (props) => {
-  const navigate = useNavigate();
-
-  const addToFavorites = async (bookId) => {
-    try {
-      await addBookToFavorites(bookId);
-      toast({
-        title: "O livro foi adicionado aos favoritos",
-        type: "success",
-        duration: 2000,
-      });
-    } catch (error) {
-      if (error instanceof UnauthorizedError) {
-        toast({
-          title: "Acesso não permitido",
-          description: "Por favor, faça o login antes de acessar esta página",
-          type: "error",
-          duration: 3000,
-        });
-        navigate("/login");
-      } else {
-        toast({
-          title: "Houve um erro inesperado",
-          description: "Por favor, tente novamente",
-          type: "error",
-          duration: 3000,
-        });
-      }
-    }
-  };
-
   return (
     <div className="relative border p-4 text-center group bg-white rounded-md">
       <Link to={`/book/${props.bookId}`}>
@@ -56,9 +23,11 @@ const BooksCard = (props) => {
         <button className="bg-slate-200 text-black px-4 sm:px-6 py-2 rounded-md hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 text-sm">
           Baixar
         </button>
-        <button type="button" onClick={() => addToFavorites(props.bookId)}>
+        <button type="button" onClick={props.onClickHeart}>
           <span className="bg-slate-200 rounded-md p-2 hover:bg-slate-400 text-xl flex justify-center">
-            <ion-icon name="heart"></ion-icon>
+            <ion-icon
+              name={props.isFavorite ? "heart" : "heart-outline"}
+            ></ion-icon>
           </span>
         </button>
       </div>
@@ -71,6 +40,8 @@ BooksCard.propTypes = {
   image: PropTypes.string.isRequired,
   hoverImage: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  isFavorite: PropTypes.bool.isRequired,
+  onClickHeart: PropTypes.func.isRequired,
 };
 
 export default BooksCard;

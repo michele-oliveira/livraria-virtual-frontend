@@ -1,14 +1,24 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import Footer from "../components/Footer";
+import { useNavigate, useParams } from "react-router-dom";
+import toast from "../components/react-stacked-toast";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
+import Footer from "../components/Footer";
 import { getBook } from "../api/books/books.api";
-import toast from "../components/react-stacked-toast";
+import {
+  addBookToFavorites,
+  getFavoriteBooks,
+  removeBookFromFavorites,
+} from "../api/users/users.api";
+import { getJwt } from "../utils/jwt";
+import UnauthorizedError from "../errors/http/UnauthorizedError";
 
 const Book = () => {
   const [book, setBook] = useState();
+  const [isFavorite, setIsFavorite] = useState(false);
+
   const params = useParams();
+  const navigate = useNavigate();
 
   const fetchBook = async (bookId) => {
     try {
@@ -18,15 +28,103 @@ const Book = () => {
       console.error(error);
       toast({
         title: "Erro inesperado",
-        description: "Houve um erro durante a sincronização dos dados",
+        description: "Houve um erro durante o carregamento deste livro",
         type: "error",
         duration: 2500,
       });
     }
   };
 
+  const checkIsFavorite = async (bookId) => {
+    try {
+      const jwt = getJwt();
+      if (jwt) {
+        const favoriteBooks = await getFavoriteBooks();
+        if (favoriteBooks.find((book) => book.id === bookId)) {
+          setIsFavorite(true);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Erro inesperado",
+        description: "Houve um erro durante a verificação dos dados do livro",
+        type: "error",
+        duration: 2500,
+      });
+    }
+  };
+
+  const addToFavorites = async (bookId) => {
+    try {
+      await addBookToFavorites(bookId);
+      setIsFavorite(true);
+      toast({
+        title: "O livro foi adicionado aos favoritos",
+        type: "success",
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error(error);
+      if (error instanceof UnauthorizedError) {
+        toast({
+          title: "Acesso não permitido",
+          description: "Por favor, faça o login antes de utilizar este recurso",
+          type: "error",
+          duration: 3000,
+        });
+        navigate("/login");
+      } else {
+        toast({
+          title: "Houve um erro inesperado",
+          description: "Por favor, tente novamente",
+          type: "error",
+          duration: 3000,
+        });
+      }
+    }
+  };
+
+  const removeFromFavorites = async (bookId) => {
+    try {
+      await removeBookFromFavorites(bookId);
+      setIsFavorite(false);
+      toast({
+        title: "O livro foi removido dos favoritos",
+        type: "success",
+        duration: 2000,
+      });
+    } catch (error) {
+      if (error instanceof UnauthorizedError) {
+        toast({
+          title: "Acesso não permitido",
+          description: "Por favor, faça o login antes de utilizar este recurso",
+          type: "error",
+          duration: 3000,
+        });
+        navigate("/login");
+      } else {
+        toast({
+          title: "Houve um erro inesperado",
+          description: "Por favor, tente novamente",
+          type: "error",
+          duration: 3000,
+        });
+      }
+    }
+  };
+
+  const handleClickHeartButton = () => {
+    if (isFavorite) {
+      removeFromFavorites(params.bookId);
+    } else {
+      addToFavorites(params.bookId);
+    }
+  };
+
   useEffect(() => {
     fetchBook(params.bookId);
+    checkIsFavorite(params.bookId);
   }, []);
 
   return (
@@ -46,14 +144,17 @@ const Book = () => {
               <button className="bg-slate-200 text-black px-2 sm:px-6 py-2 rounded-md hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 text-sm flex items-center justify-center w-32 h-12">
                 Baixar
               </button>
-              <Link
-                to="#"
+              <button
+                type="button"
+                onClick={handleClickHeartButton}
                 className="flex items-center justify-center w-12 h-12"
               >
                 <span className="bg-slate-200 rounded-md p-3 hover:bg-slate-400 text-xl flex justify-center">
-                  <ion-icon name="heart"></ion-icon>
+                  <ion-icon
+                    name={isFavorite ? "heart" : "heart-outline"}
+                  ></ion-icon>
                 </span>
-              </Link>
+              </button>
             </div>
           </div>
           <div className="flex flex-col justify-center ml-4 mt-4 bg-white border p-10 rounded-lg">
@@ -76,9 +177,7 @@ const Book = () => {
         </section>
       ) : (
         <div className="border rounded-lg m-5 mt-10 p-5 flex flex-col justify-center items-center bg-white ">
-          <p className="text-gray-800 font-bold">
-            Livro não encontrado
-          </p>
+          <p className="text-gray-800 font-bold">Livro não encontrado</p>
           <p className="mt-5 text-gray-900 text-sm">
             O livro que você está procurando não existe ou pode ter sido
             removido

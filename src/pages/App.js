@@ -1,25 +1,40 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "../components/react-stacked-toast";
 import Header from "../components/Header.js";
 import Nav from "../components/Nav.js";
 import BooksCard from "../components/BooksCard.js";
 import Footer from "../components/Footer.js";
+import { getBooks } from "../api/books/books.api.js";
+import {
+  addBookToFavorites,
+  getFavoriteBooks,
+  removeBookFromFavorites,
+} from "../api/users/users.api.js";
+import { getJwt } from "../utils/jwt.js";
+import UnauthorizedError from "../errors/http/UnauthorizedError.js";
 
 import card from "../assets/images/car1.png";
 import card2 from "../assets/images/card2.png";
 import card3 from "../assets/images/card3.png";
-import { getBooks } from "../api/books/books.api.js";
-import toast from "../components/react-stacked-toast/index.js";
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [books, setBooks] = useState([]);
+  const [favoriteBooks, setFavoriteBooks] = useState([]);
+
+  const navigate = useNavigate();
+
   const intervalTime = 5000;
   const totalSlides = 3;
 
-  const goToNextSlide = useCallback(function goToNextSlide() {
-    const newSlide = currentSlide + 1 >= totalSlides ? 0 : currentSlide + 1;
-    setCurrentSlide(newSlide);
-  }, [currentSlide]);
+  const goToNextSlide = useCallback(
+    function goToNextSlide() {
+      const newSlide = currentSlide + 1 >= totalSlides ? 0 : currentSlide + 1;
+      setCurrentSlide(newSlide);
+    },
+    [currentSlide]
+  );
 
   function goToSlide(slide) {
     setCurrentSlide(slide);
@@ -33,15 +48,107 @@ function App() {
       console.error(error);
       toast({
         title: "Erro inesperado",
-        description: "Houve um erro durante a sincronização de dados",
+        description: "Houve um erro durante a sincronização dos livros",
         type: "error",
         duration: 2500,
-      })
+      });
+    }
+  };
+
+  const fetchFavoriteBooks = async () => {
+    try {
+      const jwt = getJwt();
+      if (jwt) {
+        const favoriteBooks = await getFavoriteBooks();
+        const favoriteBooksIds = favoriteBooks.map((book) => book.id);
+        setFavoriteBooks(favoriteBooksIds);
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Erro inesperado",
+        description: "Houve um erro durante a sincronização dos favoritos",
+        type: "error",
+        duration: 2500,
+      });
+    }
+  };
+
+  const addToFavorites = async (bookId) => {
+    try {
+      await addBookToFavorites(bookId);
+      const updatedFavoriteBooks = favoriteBooks;
+      updatedFavoriteBooks.push(bookId);
+      setFavoriteBooks([...updatedFavoriteBooks]);
+      toast({
+        title: "O livro foi adicionado aos favoritos",
+        type: "success",
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error(error);
+      if (error instanceof UnauthorizedError) {
+        toast({
+          title: "Acesso não permitido",
+          description: "Por favor, faça o login antes de utilizar este recurso",
+          type: "error",
+          duration: 3000,
+        });
+        navigate("/login");
+      } else {
+        toast({
+          title: "Houve um erro inesperado",
+          description: "Por favor, tente novamente",
+          type: "error",
+          duration: 3000,
+        });
+      }
+    }
+  };
+
+  const removeFromFavorites = async (bookId) => {
+    try {
+      await removeBookFromFavorites(bookId);
+      const updatedFavoriteBooks = favoriteBooks.filter(
+        (item) => item !== bookId
+      );
+      setFavoriteBooks([...updatedFavoriteBooks]);
+      toast({
+        title: "O livro foi removido dos favoritos",
+        type: "success",
+        duration: 2000,
+      });
+    } catch (error) {
+      if (error instanceof UnauthorizedError) {
+        toast({
+          title: "Acesso não permitido",
+          description: "Por favor, faça o login antes de utilizar este recurso",
+          type: "error",
+          duration: 3000,
+        });
+        navigate("/login");
+      } else {
+        toast({
+          title: "Houve um erro inesperado",
+          description: "Por favor, tente novamente",
+          type: "error",
+          duration: 3000,
+        });
+      }
+    }
+  };
+
+  const handleClickHeartButton = (bookId) => {
+    if (favoriteBooks.includes(bookId)) {
+      removeFromFavorites(bookId);
+    } else {
+      addToFavorites(bookId);
     }
   };
 
   useEffect(() => {
     fetchBooks();
+    fetchFavoriteBooks();
   }, []);
 
   useEffect(() => {
@@ -115,6 +222,8 @@ function App() {
                 image={book.image_1}
                 hoverImage={book.image_2}
                 title={book.book_name}
+                isFavorite={favoriteBooks.includes(book.id)}
+                onClickHeart={() => handleClickHeartButton(book.id)}
               />
             ))}
           </div>
