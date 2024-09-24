@@ -9,9 +9,9 @@ const List = ({ data, component, emptyComponent }) => {
 };
 
 List.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.any),
-  component: PropTypes.node,
-  emptyComponent: PropTypes.node,
+  data: PropTypes.arrayOf(PropTypes.any).isRequired,
+  component: PropTypes.node.isRequired,
+  emptyComponent: PropTypes.node.isRequired,
 };
 
 export default List;
