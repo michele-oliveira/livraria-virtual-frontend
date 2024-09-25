@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "../components/react-stacked-toast";
+import Loading from "../components/Loading";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
+import Item from "../components/Item";
 import Footer from "../components/Footer";
 import { getBook } from "../api/books/books.api";
 import {
@@ -15,6 +17,7 @@ import UnauthorizedError from "../errors/http/UnauthorizedError";
 
 const Book = () => {
   const [book, setBook] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
   const params = useParams();
@@ -22,6 +25,7 @@ const Book = () => {
 
   const fetchBook = async (bookId) => {
     try {
+      setIsLoading(true);
       const book = await getBook(bookId);
       setBook(book);
     } catch (error) {
@@ -32,6 +36,8 @@ const Book = () => {
         type: "error",
         duration: 2500,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -131,60 +137,67 @@ const Book = () => {
     <div className="bg-gray-100">
       <Header />
       <Nav />
-      {book ? (
-        <section className="flex flex-col md:flex-row p-6 rounded-lg">
-          <div className="flex-shrink-0 relative p-5">
-            <img
-              className="w-56 sm:w-64 md:w-72 rounded-lg shadow-md transition-opacity duration-300 ease-in-out group-hover:opacity-80"
-              src={book.image_1}
-              alt={`Contains the book cover of ${book.book_name}`}
-            />
-
-            <div className="w-full flex justify-center gap-2 p-5">
-              <button className="bg-slate-200 text-black px-2 sm:px-6 py-2 rounded-md hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 text-sm flex items-center justify-center w-32 h-12">
-                Baixar
-              </button>
-              <button
-                type="button"
-                onClick={handleClickHeartButton}
-                className="flex items-center justify-center w-12 h-12"
-              >
-                <span className="bg-slate-200 rounded-md p-3 hover:bg-slate-400 text-xl flex justify-center">
-                  <ion-icon
-                    name={isFavorite ? "heart" : "heart-outline"}
-                  ></ion-icon>
-                </span>
-              </button>
-            </div>
-          </div>
-          <div className="flex flex-col justify-center ml-4 mt-4 bg-white border p-10 rounded-lg">
-            <h1 className="text-2xl font-bold text-gray-800 pb-5">
-              {book.book_name.toUpperCase()}
-            </h1>
-            <p className="text-gray-500">Editora: {book.publisher}</p>
-            <p className="text-gray-500">Idioma: {book.language}</p>
-            <p className="text-gray-500">Páginas: {book.pages}</p>
-            <p className="text-gray-500">Gênero: {book.gender}</p>
-            {book.description.split("\n").map((p, index) => (
-              <p
-                className="text-gray-700 leading-relaxed text-sm mt-4"
-                key={index}
-              >
-                {p}
-              </p>
-            ))}
-          </div>
-        </section>
+      {isLoading ? (
+        <Loading text="Carregando detalhes do livro..." />
       ) : (
-        <div className="border rounded-lg m-5 mt-10 p-5 flex flex-col justify-center items-center bg-white ">
-          <p className="text-gray-800 font-bold">Livro não encontrado</p>
-          <p className="mt-5 text-gray-900 text-sm">
-            O livro que você está procurando não existe ou pode ter sido
-            removido
-          </p>
-        </div>
-      )}
+        <Item
+          data={book}
+          component={() => (
+            <section className="flex flex-col md:flex-row p-6 rounded-lg">
+              <div className="flex-shrink-0 relative p-5">
+                <img
+                  className="w-56 sm:w-64 md:w-72 rounded-lg shadow-md transition-opacity duration-300 ease-in-out group-hover:opacity-80"
+                  src={book.image_1}
+                  alt={`Contains the book cover of ${book.book_name}`}
+                />
 
+                <div className="w-full flex justify-center gap-2 p-5">
+                  <button className="bg-slate-200 text-black px-2 sm:px-6 py-2 rounded-md hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 text-sm flex items-center justify-center w-32 h-12">
+                    Baixar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleClickHeartButton}
+                    className="flex items-center justify-center w-12 h-12"
+                  >
+                    <span className="bg-slate-200 rounded-md p-3 hover:bg-slate-400 text-xl flex justify-center">
+                      <ion-icon
+                        name={isFavorite ? "heart" : "heart-outline"}
+                      ></ion-icon>
+                    </span>
+                  </button>
+                </div>
+              </div>
+              <div className="flex flex-col justify-center ml-4 mt-4 bg-white border p-10 rounded-lg">
+                <h1 className="text-2xl font-bold text-gray-800 pb-5">
+                  {book.book_name.toUpperCase()}
+                </h1>
+                <p className="text-gray-500">Editora: {book.publisher}</p>
+                <p className="text-gray-500">Idioma: {book.language}</p>
+                <p className="text-gray-500">Páginas: {book.pages}</p>
+                <p className="text-gray-500">Gênero: {book.gender}</p>
+                {book.description.split("\n").map((p, index) => (
+                  <p
+                    className="text-gray-700 leading-relaxed text-sm mt-4"
+                    key={index}
+                  >
+                    {p}
+                  </p>
+                ))}
+              </div>
+            </section>
+          )}
+          emptyComponent={() => (
+            <div className="border rounded-lg m-5 mt-10 p-5 flex flex-col justify-center items-center bg-white ">
+              <p className="text-gray-800 font-bold">Livro não encontrado</p>
+              <p className="mt-5 text-gray-900 text-sm">
+                O livro que você está procurando não existe ou pode ter sido
+                removido
+              </p>
+            </div>
+          )}
+        />
+      )}
       <Footer />
     </div>
   );
