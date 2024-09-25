@@ -1,17 +1,17 @@
 import PropTypes from "prop-types";
 
-const List = ({ data, component, emptyComponent }) => {
+const List = ({ data, component: Component, emptyComponent: EmptyComponent }) => {
   if (data.length) {
-    return component;
+    return <Component />;
   } else {
-    return emptyComponent;
+    return <EmptyComponent />;
   }
 };
 
 List.propTypes = {
   data: PropTypes.arrayOf(PropTypes.any).isRequired,
-  component: PropTypes.node.isRequired,
-  emptyComponent: PropTypes.node.isRequired,
+  component: PropTypes.elementType.isRequired,
+  emptyComponent: PropTypes.elementType.isRequired,
 };
 
 export default List;

@@ -220,7 +220,7 @@ function App() {
           {books ? (
             <List
               data={books}
-              component={
+              component={() => (
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-5">
                   {books.map((book) => (
                     <BooksCard
@@ -234,8 +234,8 @@ function App() {
                     />
                   ))}
                 </div>
-              }
-              emptyComponent={
+              )}
+              emptyComponent={() => (
                 <div className="border rounded-lg m-5 p-5 flex flex-col justify-center items-center bg-white ">
                   <p className="text-gray-800 font-bold">
                     Nenhum livro encontrado
@@ -245,7 +245,7 @@ function App() {
                     pode ser um erro de sistema, por favor, contate o suporte.
                   </p>
                 </div>
-              }
+              )}
             />
           ) : (
             <Loading text="Carregando livros..." />
