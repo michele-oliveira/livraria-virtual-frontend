@@ -1,7 +1,9 @@
-export const getBooks = async () => {
+export const getBooks = async (searchParam) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/books`
+      searchParam
+        ? `${process.env.REACT_APP_BACKEND_URL}/books?search=${searchParam}`
+        : `${process.env.REACT_APP_BACKEND_URL}/books`
     );
     if (!response.ok) {
       throw new Error(response.statusText);
@@ -15,17 +17,17 @@ export const getBooks = async () => {
 };
 
 export const getBook = async (bookId) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/books/${bookId}`
-      );
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      const book = await response.json();
-      return book;
-    } catch (error) {
-      console.log(error);
-      throw error;
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/books/${bookId}`
+    );
+    if (!response.ok) {
+      throw new Error(response.statusText);
     }
-  };
+    const book = await response.json();
+    return book;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

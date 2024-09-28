@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import toast from "../components/react-stacked-toast";
 import Header from "../components/Header.js";
 import Nav from "../components/Nav.js";
@@ -26,6 +26,7 @@ function App() {
   const [favoriteBooks, setFavoriteBooks] = useState([]);
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const intervalTime = 5000;
   const totalSlides = 3;
@@ -42,9 +43,9 @@ function App() {
     setCurrentSlide(slide);
   }
 
-  const fetchBooks = async () => {
+  const fetchBooks = async (search) => {
     try {
-      const books = await getBooks();
+      const books = await getBooks(search);
       setBooks(books);
     } catch (error) {
       console.error(error);
@@ -150,9 +151,11 @@ function App() {
   };
 
   useEffect(() => {
-    fetchBooks();
+    const search = searchParams.get('search');
+
+    fetchBooks(search);
     fetchFavoriteBooks();
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {

@@ -1,7 +1,17 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 import logo from "../assets/images/png-transparent-drawing-graphy-tree-of-life-others-removebg-preview.png";
 
 const Header = () => {
+  const [search, setSearch] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    navigate(`/?search=${search}`);
+  };
+
   return (
     <>
       <div className="flex justify-end gap-4 md:gap-14 text-sm items-center p-5 pb-1">
@@ -24,13 +34,17 @@ const Header = () => {
           </div>
           <div className="flex items-center w-full md:w-1/2 lg:w-1/3 border p-1 rounded-md">
             <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               className="flex-grow pl-2 text-slate-500 text-sm h-full outline-none"
               placeholder="Buscar"
             />
-            <ion-icon
-              name="search-outline"
-              className="text-slate-500 mx-2 cursor-pointer"
-            ></ion-icon>
+            <button type="button" onClick={handleSearch}>
+              <ion-icon
+                name="search-outline"
+                className="text-slate-500 mx-2 cursor-pointer"
+              ></ion-icon>
+            </button>
           </div>
           <div className="flex gap-4 mt-4 md:mt-0 ">
             <span className="text-slate-700 bg-slate-200 rounded-md p-2 h-8 hover:bg-slate-400">

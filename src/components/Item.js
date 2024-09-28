@@ -2,11 +2,11 @@ import PropTypes from "prop-types";
 
 const Item = ({
   data,
-  component: Component,
+  component,
   emptyComponent: EmptyComponent,
 }) => {
   if (data && Object.keys(data).length) {
-    return <Component />;
+    return component(data);
   } else {
     return <EmptyComponent />;
   }
