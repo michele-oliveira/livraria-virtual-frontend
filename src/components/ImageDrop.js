@@ -1,12 +1,29 @@
 import React, { useRef, useState } from "react";
 import PropTypes from "prop-types";
+import toast from "./react-stacked-toast";
 
 const ImageDrop = ({ image, setImage, className }) => {
   const [dragActive, setDragActive] = useState(false);
 
   const inputRef = useRef(null);
 
+  const validFileTypes = ["image/jpeg", "image/png", "image/jpg"];
+
   const imageUrl = image && window.URL.createObjectURL(image);
+
+  const validateFile = (file) => {
+    if (validFileTypes.includes(file.type)) {
+      return true;
+    } else {
+      toast({
+        type: "warning",
+        title: "Imagem inválida",
+        description: "Por favor, envio um formato válido de imagem (JPEG, JPG, PNG)",
+        duration: 3000  
+      });
+      return false;
+    }
+  };
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -24,13 +41,19 @@ const ImageDrop = ({ image, setImage, className }) => {
     setDragActive(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      setImage(e.dataTransfer.files[0]);
+      const droppedFile = e.dataTransfer.files[0];
+      if (validateFile(droppedFile)) {
+        setImage(droppedFile);
+      }
       e.dataTransfer.clearData();
     }
   };
 
   const handleFileSelect = (e) => {
-    setImage(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (selectedFile && validateFile(selectedFile)) {
+      setImage(selectedFile);
+    }
   };
 
   const handleBrowseFiles = () => {

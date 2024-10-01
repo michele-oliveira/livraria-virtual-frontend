@@ -2,11 +2,26 @@ import React, { useRef, useState } from "react";
 import PropTypes from "prop-types";
 
 import pdfIcon from "../assets/icons/pdf_file_icon.svg";
+import toast from "./react-stacked-toast";
 
 const PdfDrop = ({ pdfFile, setPdfFile, className }) => {
   const [dragActive, setDragActive] = useState(false);
 
   const inputRef = useRef(null);
+
+  const validateFile = (file) => {
+    if (file.type === 'application/pdf') {
+      return true;
+    } else {
+      toast({
+        type: "warning",
+        title: "Arquivo inválido",
+        description: "Por favor, envie um arquivo PDF válido",
+        duration: 3000  
+      });
+      return false;
+    }
+  };
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -24,13 +39,19 @@ const PdfDrop = ({ pdfFile, setPdfFile, className }) => {
     setDragActive(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      setPdfFile(e.dataTransfer.files[0]);
+      const droppedFile = e.dataTransfer.files[0];
+      if (validateFile(droppedFile)) {
+        setPdfFile(droppedFile);
+      }
       e.dataTransfer.clearData();
     }
   };
 
   const handleFileSelect = (e) => {
-    setPdfFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (selectedFile && validateFile(selectedFile)) {
+      setPdfFile(selectedFile);
+    }
   };
 
   const handleBrowseFiles = () => {
@@ -61,7 +82,7 @@ const PdfDrop = ({ pdfFile, setPdfFile, className }) => {
       >
         <input
           type="file"
-          accept=".pdf"
+          accept="application/pdf"
           ref={inputRef}
           onChange={handleFileSelect}
           className="hidden"
