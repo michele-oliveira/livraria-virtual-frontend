@@ -187,22 +187,6 @@ const AdminPage = () => {
               />
             </div>
 
-            {/* <div className="mb-6">
-              <label
-                htmlFor="file"
-                className="block text-sm font-medium text-text-light"
-              >
-                Enviar Arquivo (PDF)
-              </label>
-              <input
-                type="file"
-                id="file"
-                accept=".pdf"
-                onChange={(e) => onChangeBookForm("file", e.target.files[0])}
-                className="mt-1 block w-full px-3 py-2"
-              />
-            </div> */}
-
             <button
               type="submit"
               className="w-full bg-slate-400 text-white px-4 py-2 rounded-md hover:bg-slate-600"
