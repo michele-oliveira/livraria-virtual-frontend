@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
 import toast from "../components/react-stacked-toast";
+import ImageDrop from "../components/ImageDrop";
 
 const AdminPage = () => {
   const [bookForm, setBookForm] = useState({
@@ -11,7 +12,8 @@ const AdminPage = () => {
     pages: " ",
     description: " ",
     publisher: " ",
-    image: null,
+    image1: null,
+    image2: null,
     file: null,
   });
 
@@ -28,7 +30,8 @@ const AdminPage = () => {
       formData.append("pages", bookForm.pages);
       formData.append("description", bookForm.description);
       formData.append("publisher", bookForm.publisher);
-      if (bookForm.image) formData.append("image", bookForm.image);
+      if (bookForm.image1) formData.append("image1", bookForm.image1);
+      if (bookForm.image2) formData.append("image2", bookForm.image2);
       if (bookForm.file) formData.append("file", bookForm.file);
 
       toast({
@@ -146,14 +149,26 @@ const AdminPage = () => {
                 htmlFor="image"
                 className="block text-sm font-medium text-text-light"
               >
-                Enviar Imagem
+                Imagem 1
               </label>
-              <input
-                type="file"
-                id="image"
-                accept="image/*"
-                onChange={(e) => onChangeBookForm("image", e.target.files[0])}
-                className="mt-1 block w-full px-3 py-2"
+              <ImageDrop
+                image={bookForm.image1}
+                setImage={(image) => onChangeBookForm("image1", image)}
+                className="mt-1 block w-full"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="image"
+                className="block text-sm font-medium text-text-light"
+              >
+                Imagem 2
+              </label>
+              <ImageDrop
+                image={bookForm.image2}
+                setImage={(image) => onChangeBookForm("image2", image)}
+                className="mt-1 block w-full"
               />
             </div>
 
