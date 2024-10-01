@@ -65,7 +65,7 @@ const ImageDrop = ({ image, setImage, className }) => {
         {image ? (
           <img
             src={imageUrl}
-            alt="Uploaded"
+            alt={`Uploaded ${image.name}`}
             className={`w-full h-full object-cover ${dragActive ? "bg-blue-500 opacity-60" : ""}`}
           />
         ) : (
