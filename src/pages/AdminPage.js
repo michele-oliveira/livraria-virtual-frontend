@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Nav from "../components/Nav";
 import toast from "../components/react-stacked-toast";
 import ImageDrop from "../components/ImageDrop";
+import PdfDrop from "../components/PdfDrop";
 
 const AdminPage = () => {
   const [bookForm, setBookForm] = useState({
@@ -177,6 +178,20 @@ const AdminPage = () => {
                 htmlFor="file"
                 className="block text-sm font-medium text-text-light"
               >
+                Arquivo (PDF)
+              </label>
+              <PdfDrop
+                pdfFile={bookForm.file}
+                setPdfFile={(file) => onChangeBookForm("file", file)}
+                className="mt-1 block w-full"
+              />
+            </div>
+
+            {/* <div className="mb-6">
+              <label
+                htmlFor="file"
+                className="block text-sm font-medium text-text-light"
+              >
                 Enviar Arquivo (PDF)
               </label>
               <input
@@ -186,7 +201,7 @@ const AdminPage = () => {
                 onChange={(e) => onChangeBookForm("file", e.target.files[0])}
                 className="mt-1 block w-full px-3 py-2"
               />
-            </div>
+            </div> */}
 
             <button
               type="submit"
