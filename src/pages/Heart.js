@@ -102,7 +102,7 @@ const Heart = () => {
         {favoriteBooks ? (
           <List
             data={favoriteBooks}
-            component={
+            component={() => (
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-5">
                 {favoriteBooks.map((book) => (
                   <Favorite
@@ -115,8 +115,8 @@ const Heart = () => {
                   />
                 ))}
               </div>
-            }
-            emptyComponent={
+            )}
+            emptyComponent={() => (
               <div className="border rounded-lg m-5 p-5 flex flex-col justify-center items-center bg-white ">
                 <p className="text-gray-800 font-bold">
                   Você ainda não possui nenhum livro favorito
@@ -125,7 +125,7 @@ const Heart = () => {
                   Você pode adicionar seus livros favoritos na página inicial
                 </p>
               </div>
-            }
+            )}
           />
         ) : (
           <Loading text="Carregando livros..." />
