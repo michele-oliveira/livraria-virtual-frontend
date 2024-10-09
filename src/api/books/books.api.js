@@ -31,3 +31,17 @@ export const getBook = async (bookId) => {
     throw error;
   }
 };
+
+export const newBook = async (newBookData) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books`, {
+      method: "POST",
+      body: newBookData,
+    });
+    const newBook = await response.json();
+    return newBook;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

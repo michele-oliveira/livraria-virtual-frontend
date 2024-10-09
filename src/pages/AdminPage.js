@@ -1,18 +1,21 @@
 import { useState } from "react";
+import { newBook } from "../api/books/books.api";
+import toast from "../components/react-stacked-toast";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
-import toast from "../components/react-stacked-toast";
 import ImageDrop from "../components/ImageDrop";
 import PdfDrop from "../components/PdfDrop";
 
 const AdminPage = () => {
   const [bookForm, setBookForm] = useState({
-    bookName: " ",
-    author: " ",
-    pages: " ",
-    description: " ",
-    publisher: " ",
+    bookName: "",
+    author: "",
+    publisher: "",
+    pages: "",
+    gender: "",
+    description: "",
+    language: "",
     image1: null,
     image2: null,
     file: null,
@@ -22,18 +25,39 @@ const AdminPage = () => {
     setBookForm({ ...bookForm, [propName]: value });
   };
 
+  const emptyForm = () => {
+    setBookForm({
+      bookName: "",
+      author: "",
+      publisher: "",
+      pages: "",
+      gender: "",
+      description: "",
+      language: "",
+      image1: null,
+      image2: null,
+      file: null,
+    });
+  }
+
   const onSubmitBookForm = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData();
-      formData.append("bookName", bookForm.bookName);
+      formData.append("book_name", bookForm.bookName);
       formData.append("author", bookForm.author);
-      formData.append("pages", bookForm.pages);
-      formData.append("description", bookForm.description);
       formData.append("publisher", bookForm.publisher);
-      if (bookForm.image1) formData.append("image1", bookForm.image1);
-      if (bookForm.image2) formData.append("image2", bookForm.image2);
-      if (bookForm.file) formData.append("file", bookForm.file);
+      formData.append("pages", bookForm.pages);
+      formData.append("gender", bookForm.gender);
+      formData.append("description", bookForm.description);
+      formData.append("language", bookForm.language);
+      if (bookForm.image1) formData.append("image_1", bookForm.image1);
+      if (bookForm.image2) formData.append("image_2", bookForm.image2);
+      if (bookForm.file) formData.append("book_file", bookForm.file);
+
+      await newBook(formData);
+
+      emptyForm();
 
       toast({
         title: "Livro registrado com sucesso",
@@ -44,6 +68,7 @@ const AdminPage = () => {
       toast({
         title: "Erro inesperado",
         description: "Houve um erro ao enviar as informações do livro",
+        type: "error",
         duration: 2500,
       });
     }
@@ -96,6 +121,23 @@ const AdminPage = () => {
 
             <div className="mb-4">
               <label
+                htmlFor="publisher"
+                className="block text-sm font-medium text-text-light"
+              >
+                Editora
+              </label>
+              <input
+                type="text"
+                id="publisher"
+                value={bookForm.publisher}
+                onChange={(e) => onChangeBookForm("publisher", e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
                 htmlFor="pages"
                 className="block text-sm font-medium text-text-light"
               >
@@ -110,6 +152,24 @@ const AdminPage = () => {
                 required
               />
             </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="gender"
+                className="block text-sm font-medium text-text-light"
+              >
+                Gênero
+              </label>
+              <input
+                type="text"
+                id="gender"
+                value={bookForm.gender}
+                onChange={(e) => onChangeBookForm("gender", e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+
             <div className="mb-4">
               <label
                 htmlFor="description"
@@ -130,16 +190,16 @@ const AdminPage = () => {
 
             <div className="mb-4">
               <label
-                htmlFor="publisher"
+                htmlFor="language"
                 className="block text-sm font-medium text-text-light"
               >
-                Editora
+                Idioma
               </label>
               <input
                 type="text"
-                id="publisher"
-                value={bookForm.publisher}
-                onChange={(e) => onChangeBookForm("publisher", e.target.value)}
+                id="language"
+                value={bookForm.language}
+                onChange={(e) => onChangeBookForm("language", e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
                 required
               />
