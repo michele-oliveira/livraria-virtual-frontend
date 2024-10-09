@@ -107,9 +107,9 @@ const ImageDrop = ({ image, setImage, className }) => {
 };
 
 ImageDrop.propTypes = {
-    image: PropTypes.string.isRequired,
+    image: PropTypes.string,
     setImage: PropTypes.func.isRequired,
-    className: PropTypes.func.isRequired
+    className: PropTypes.string
 }
 
 export default ImageDrop;

@@ -112,9 +112,9 @@ const PdfDrop = ({ pdfFile, setPdfFile, className }) => {
 };
 
 PdfDrop.propTypes = {
-  pdfFile: PropTypes.string.isRequired,
+  pdfFile: PropTypes.string,
   setPdfFile: PropTypes.func.isRequired,
-  className: PropTypes.func.isRequired,
+  className: PropTypes.string,
 };
 
 export default PdfDrop;
