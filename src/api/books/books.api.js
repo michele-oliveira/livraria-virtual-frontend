@@ -45,3 +45,17 @@ export const newBook = async (newBookData) => {
     throw error;
   }
 };
+
+export const updateBook = async (updatedBookData) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books`, {
+      method: "PUT",
+      body: updatedBookData,
+    });
+    const newBook = await response.json();
+    return newBook;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

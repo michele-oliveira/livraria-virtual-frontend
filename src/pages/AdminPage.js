@@ -1,13 +1,17 @@
-import { useState } from "react";
-import { newBook } from "../api/books/books.api";
+import { useEffect, useState } from "react";
+import { getBook, newBook, updateBook } from "../api/books/books.api";
 import toast from "../components/react-stacked-toast";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
 import ImageDrop from "../components/ImageDrop";
 import PdfDrop from "../components/PdfDrop";
+import { useNavigate, useParams } from "react-router-dom";
+import { getFileFromUrl } from "../utils/files";
+import Loading from "../components/Loading";
 
 const AdminPage = () => {
+  const [loading, setLoading] = useState(false);
   const [bookForm, setBookForm] = useState({
     bookName: "",
     author: "",
@@ -20,6 +24,9 @@ const AdminPage = () => {
     image2: null,
     file: null,
   });
+
+  const navigate = useNavigate();
+  const { bookId } = useParams();
 
   const onChangeBookForm = (propName, value) => {
     setBookForm({ ...bookForm, [propName]: value });
@@ -38,12 +45,13 @@ const AdminPage = () => {
       image2: null,
       file: null,
     });
-  }
+  };
 
   const onSubmitBookForm = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData();
+      if (bookId) formData.append("id", bookId);
       formData.append("book_name", bookForm.bookName);
       formData.append("author", bookForm.author);
       formData.append("publisher", bookForm.publisher);
@@ -55,15 +63,23 @@ const AdminPage = () => {
       if (bookForm.image2) formData.append("image_2", bookForm.image2);
       if (bookForm.file) formData.append("book_file", bookForm.file);
 
-      await newBook(formData);
-
-      emptyForm();
-
-      toast({
-        title: "Livro registrado com sucesso",
-        type: "success",
-        duration: 2000,
-      });
+      if (formData.get("id")) {
+        await updateBook(formData);
+        toast({
+          title: "Livro atualizado com sucesso",
+          type: "success",
+          duration: 2000,
+        });
+        navigate("/");
+      } else {
+        await newBook(formData);
+        emptyForm();
+        toast({
+          title: "Livro registrado com sucesso",
+          type: "success",
+          duration: 2000,
+        });
+      }
     } catch (error) {
       toast({
         title: "Erro inesperado",
@@ -73,6 +89,52 @@ const AdminPage = () => {
       });
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (bookId) {
+          setLoading(true);
+          const book = await getBook(bookId);
+
+          if (book) {
+            const image1File = await getFileFromUrl(book.image_1);
+            const image2File = await getFileFromUrl(book.image_2);
+            const bookFileFile = await getFileFromUrl(book.book_file);
+
+            setBookForm({
+              bookName: book.book_name,
+              author: book.author,
+              publisher: book.publisher,
+              pages: book.pages,
+              gender: book.gender,
+              description: book.description,
+              language: book.language,
+              image1: image1File,
+              image2: image2File,
+              file: bookFileFile,
+            });
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: "Erro ao carregar o livro",
+          description:
+            "Houve um erro inesperado ao carregar as informações do livro",
+          type: "error",
+          duration: 3000,
+        });
+        navigate("/");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [bookId, navigate]);
+
+  if (loading) {
+    return <Loading text="Buscando livro..." />;
+  }
 
   return (
     <div className="bg-gray-100">
