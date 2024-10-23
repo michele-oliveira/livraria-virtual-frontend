@@ -19,11 +19,15 @@ import card2 from "../assets/images/card2.png";
 import card3 from "../assets/images/card3.png";
 import List from "../components/List.js";
 import Loading from "../components/Loading.js";
+import Pagination from "../components/Pagination.js";
+import { ITEMS_PER_PAGE } from "../constants/config.js";
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [books, setBooks] = useState();
   const [favoriteBooks, setFavoriteBooks] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -43,10 +47,12 @@ function App() {
     setCurrentSlide(slide);
   }
 
-  const fetchBooks = async (search) => {
+  const fetchBooks = async (search, page, limit) => {
     try {
-      const books = await getBooks(search);
+      const { books, currentPage, totalPages } = await getBooks(search, page, limit);
       setBooks(books);
+      setCurrentPage(currentPage);
+      setTotalPages(totalPages);
     } catch (error) {
       console.error(error);
       setBooks([]);
@@ -151,11 +157,14 @@ function App() {
   };
 
   useEffect(() => {
-    const search = searchParams.get('search');
-
-    fetchBooks(search);
     fetchFavoriteBooks();
-  }, [searchParams]);
+  }, []);
+
+  useEffect(() => {
+    const search = searchParams.get("search");
+
+    fetchBooks(search, currentPage, ITEMS_PER_PAGE);
+  }, [searchParams, currentPage]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -255,6 +264,12 @@ function App() {
           )}
         </section>
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
 
       <Footer />
     </>
