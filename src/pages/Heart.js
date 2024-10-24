@@ -1,26 +1,26 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "../components/react-stacked-toast";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
 import Loading from "../components/Loading";
 import Favorite from "../components/Favorite";
 import List from "../components/List";
+import Pagination from "../components/Pagination";
 import Footer from "../components/Footer";
 import {
   getFavoriteBooks,
   removeBookFromFavorites,
 } from "../api/users/users.api";
+import { ITEMS_PER_PAGE } from "../constants/config";
 import UnauthorizedError from "../errors/http/UnauthorizedError";
-import toast from "../components/react-stacked-toast";
 
 const Heart = () => {
   const [favoriteBooks, setFavoriteBooks] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchFavoriteBooks();
-  }, []);
 
   const emptyFavoriteBooks = () => {
     try {
@@ -39,31 +39,38 @@ const Heart = () => {
     }
   };
 
-  const fetchFavoriteBooks = async () => {
-    try {
-      const favoriteBooks = await getFavoriteBooks();
-      setFavoriteBooks(favoriteBooks);
-    } catch (error) {
-      console.error(error);
-      if (error instanceof UnauthorizedError) {
-        toast({
-          title: "Acesso não permitido",
-          description: "Por favor, faça o login antes de acessar esta página",
-          type: "error",
-          duration: 2500,
-        });
-        navigate("/login");
-      } else {
-        toast({
-          title: "Erro inesperado",
-          description: "Houve um erro durante a sincronização de dados",
-          type: "error",
-          duration: 2500,
-        });
-        emptyFavoriteBooks();
+  const fetchFavoriteBooks = useCallback(
+    async (page) => {
+      try {
+        const { books, totalPages } = await getFavoriteBooks(
+          page,
+          ITEMS_PER_PAGE
+        );
+        setFavoriteBooks(books);
+        setTotalPages(totalPages);
+      } catch (error) {
+        console.error(error);
+        if (error instanceof UnauthorizedError) {
+          toast({
+            title: "Acesso não permitido",
+            description: "Por favor, faça o login antes de acessar esta página",
+            type: "error",
+            duration: 2500,
+          });
+          navigate("/login");
+        } else {
+          toast({
+            title: "Erro inesperado",
+            description: "Houve um erro durante a sincronização de dados",
+            type: "error",
+            duration: 2500,
+          });
+          emptyFavoriteBooks();
+        }
       }
-    }
-  };
+    },
+    [navigate]
+  );
 
   const removeFromFavorites = async (bookId) => {
     try {
@@ -94,6 +101,10 @@ const Heart = () => {
     }
   };
 
+  useEffect(() => {
+    fetchFavoriteBooks(currentPage);
+  }, [currentPage, fetchFavoriteBooks]);
+
   return (
     <div className="bg-gray-100">
       <Header />
@@ -103,18 +114,26 @@ const Heart = () => {
           <List
             data={favoriteBooks}
             component={() => (
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-5">
-                {favoriteBooks.map((book) => (
-                  <Favorite
-                    bookId={book.id}
-                    image={book.image_1}
-                    hoverImage={book.image_2}
-                    title={book.book_name}
-                    onRemoveFromFavorites={removeFromFavorites}
-                    key={book.id}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-5">
+                  {favoriteBooks.map((book) => (
+                    <Favorite
+                      bookId={book.id}
+                      image={book.image_1}
+                      hoverImage={book.image_2}
+                      title={book.book_name}
+                      onRemoveFromFavorites={removeFromFavorites}
+                      key={book.id}
+                    />
+                  ))}
+                </div>
+
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </>
             )}
             emptyComponent={() => (
               <div className="border rounded-lg m-5 p-5 flex flex-col justify-center items-center bg-white ">

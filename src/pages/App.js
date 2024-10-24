@@ -3,7 +3,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import toast from "../components/react-stacked-toast";
 import Header from "../components/Header.js";
 import Nav from "../components/Nav.js";
+import Loading from "../components/Loading.js";
 import BooksCard from "../components/BooksCard.js";
+import Pagination from "../components/Pagination.js";
 import Footer from "../components/Footer.js";
 import { getBooks } from "../api/books/books.api.js";
 import {
@@ -12,15 +14,13 @@ import {
   removeBookFromFavorites,
 } from "../api/users/users.api.js";
 import { getJwt } from "../utils/jwt.js";
+import { ITEMS_PER_PAGE } from "../constants/config.js";
 import UnauthorizedError from "../errors/http/UnauthorizedError.js";
 
 import card from "../assets/images/car1.png";
 import card2 from "../assets/images/card2.png";
 import card3 from "../assets/images/card3.png";
 import List from "../components/List.js";
-import Loading from "../components/Loading.js";
-import Pagination from "../components/Pagination.js";
-import { ITEMS_PER_PAGE } from "../constants/config.js";
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -47,11 +47,14 @@ function App() {
     setCurrentSlide(slide);
   }
 
-  const fetchBooks = async (search, page, limit) => {
+  const fetchBooks = async (search, page) => {
     try {
-      const { books, currentPage, totalPages } = await getBooks(search, page, limit);
+      const { books, totalPages } = await getBooks(
+        search,
+        page,
+        ITEMS_PER_PAGE
+      );
       setBooks(books);
-      setCurrentPage(currentPage);
       setTotalPages(totalPages);
     } catch (error) {
       console.error(error);
@@ -69,8 +72,8 @@ function App() {
     try {
       const jwt = getJwt();
       if (jwt) {
-        const favoriteBooks = await getFavoriteBooks();
-        const favoriteBooksIds = favoriteBooks.map((book) => book.id);
+        const { books } = await getFavoriteBooks();
+        const favoriteBooksIds = books.map((book) => book.id);
         setFavoriteBooks(favoriteBooksIds);
       }
     } catch (error) {
@@ -163,7 +166,7 @@ function App() {
   useEffect(() => {
     const search = searchParams.get("search");
 
-    fetchBooks(search, currentPage, ITEMS_PER_PAGE);
+    fetchBooks(search, currentPage);
   }, [searchParams, currentPage]);
 
   useEffect(() => {
