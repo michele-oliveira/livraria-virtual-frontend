@@ -43,11 +43,13 @@ export const login = async (credentials) => {
   }
 };
 
-export const getFavoriteBooks = async () => {
+export const getFavoriteBooks = async (page, limit) => {
   try {
     const accessToken = getJwt();
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/users/favorite-books`,
+      page && limit
+        ? `${process.env.REACT_APP_BACKEND_URL}/users/favorite-books?page=${page}&limit=${limit}`
+        : `${process.env.REACT_APP_BACKEND_URL}/users/favorite-books`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
