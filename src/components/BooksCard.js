@@ -5,16 +5,18 @@ const BooksCard = (props) => {
   return (
     <div className="relative border p-4 text-center group bg-white rounded-md">
       <Link to={`/book/${props.bookId}`}>
-        <img
-          className="w-24 sm:w-32 md:w-44 block mx-auto transition-opacity duration-300 ease-in-out group-hover:opacity-0"
-          src={props.image}
-          alt={`Contains book cover of ${props.title}`}
-        />
-        <img
-          className="w-32 sm:w-44 md:w-72 block mx-auto absolute inset-0 transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
-          src={props.hoverImage}
-          alt={props.title}
-        />
+        <div className="relative flex h-24 md:h-60 lg:h-64 xl:h-80 2xl:h-[24rem] items-center justify-center">
+          <img
+            className="block max-w-full max-h-full mx-auto transition-opacity duration-300 ease-in-out group-hover:opacity-0"
+            src={props.image}
+            alt={`Contains book cover of ${props.title}`}
+          />
+          <img
+            className="block max-w-full max-h-full mx-auto absolute transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
+            src={props.hoverImage}
+            alt={props.title}
+          />
+        </div>
       </Link>
       <p className="mt-2 text-sm font-bold mb-4 text-slate-600">
         {props.title}
