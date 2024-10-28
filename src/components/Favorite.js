@@ -5,16 +5,18 @@ const Favorite = ({ bookId, image, hoverImage, title, onRemoveFromFavorites }) =
   return (
     <div className="relative border p-4 text-center group bg-white rounded-md">
       <Link to="./page.html">
-        <img
-          className="w-24 sm:w-32 md:w-44 block mx-auto transition-opacity duration-300 ease-in-out group-hover:opacity-0"
-          src={image}
-          alt="Star Wars Trilogia"
-        />
-        <img
-          className="w-32 sm:w-44 md:w-72 block mx-auto absolute inset-0 transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
-          src={hoverImage}
-          alt="Star Wars Trilogia Hover"
-        />
+        <div className="relative flex h-24 md:h-60 lg:h-64 xl:h-80 2xl:h-[24rem] items-center justify-center">
+          <img
+            className="block max-w-full max-h-full mx-auto transition-opacity duration-300 ease-in-out group-hover:opacity-0"
+            src={image}
+            alt={`Contains book cover of ${title}`}
+          />
+          <img
+            className="block max-w-full max-h-full mx-auto absolute transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
+            src={hoverImage}
+            alt={title}
+          />
+        </div>
       </Link>
       <p className="mt-2 text-sm font-bold mb-4 text-slate-600">
         {title}

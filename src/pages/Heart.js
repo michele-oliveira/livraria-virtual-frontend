@@ -115,7 +115,7 @@ const Heart = () => {
             data={favoriteBooks}
             component={() => (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-5">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-7 gap-4 p-5">
                   {favoriteBooks.map((book) => (
                     <Favorite
                       bookId={book.id}
