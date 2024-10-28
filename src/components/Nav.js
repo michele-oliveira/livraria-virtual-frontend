@@ -42,12 +42,12 @@ const Nav = () => {
       </Link>
       <ul className="flex flex-wrap justify-center gap-6 sm:gap-10">
         <li className="relative group">
-          <Link to="#" id="acao" className="text-slate-600 hover:text-gray-600">
+          <Link to="#" id="acao" className="py-3 text-slate-600 hover:text-gray-600">
             Ação
           </Link>
           <ul
             id="acao-submenu"
-            className={`absolute left-0 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${shownMenu === 'acao' ? '' : 'hidden'}`}
+            className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${shownMenu === 'acao' ? '' : 'hidden'} overflow-hidden`}
           >
             <li>
               <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
@@ -70,13 +70,13 @@ const Nav = () => {
           <Link
             to="#"
             id="cientificos"
-            className="text-slate-600 hover:text-gray-600"
+            className="py-3 text-slate-600 hover:text-gray-600"
           >
             Científicos
           </Link>
           <ul
             id="cientificos-submenu"
-            className={`absolute left-0 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${shownMenu === 'cientificos' ? '' : 'hidden'}`}
+            className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${shownMenu === 'cientificos' ? '' : 'hidden'} overflow-hidden`}
           >
             <li>
               <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
@@ -100,13 +100,13 @@ const Nav = () => {
           <Link
             to="#"
             id="economia"
-            className="text-slate-600 hover:text-gray-600"
+            className="py-3 text-slate-600 hover:text-gray-600"
           >
             Economia
           </Link>
           <ul
             id="economia-submenu"
-            className={`absolute left-0 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${shownMenu === 'economia' ? '' : 'hidden'}`}
+            className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${shownMenu === 'economia' ? '' : 'hidden'} overflow-hidden`}
           >
             <li>
               <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
@@ -130,13 +130,13 @@ const Nav = () => {
           <Link
             to="#"
             id="ficcaocientifica"
-            className="text-slate-600 hover:text-gray-600"
+            className="py-3 text-slate-600 hover:text-gray-600"
           >
             Ficção Científica
           </Link>
           <ul
             id="ficcaocientifica-submenu"
-            className={`absolute left-0 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${shownMenu === 'ficcaocientifica' ? '' : 'hidden'}`}
+            className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${shownMenu === 'ficcaocientifica' ? '' : 'hidden'} overflow-hidden`}
           >
             <li>
               <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
@@ -159,13 +159,13 @@ const Nav = () => {
           <Link
             to="#"
             id="romance"
-            className="text-slate-600 hover:text-gray-600"
+            className="py-3 text-slate-600 hover:text-gray-600"
           >
             Romance
           </Link>
           <ul
             id="romance-submenu"
-            className={`absolute left-0 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${shownMenu === 'romance' ? '' : 'hidden'}`}
+            className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${shownMenu === 'romance' ? '' : 'hidden'} overflow-hidden`}
           >
             <li>
               <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
@@ -188,13 +188,13 @@ const Nav = () => {
           <Link
             to="#"
             id="religiosos"
-            className="text-slate-600 hover:text-gray-600"
+            className="py-3 text-slate-600 hover:text-gray-600"
           >
             Religiosos
           </Link>
           <ul
             id="religiosos-submenu"
-            className={`absolute left-0 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${shownMenu === 'religiosos' ? '' : 'hidden'}`}
+            className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${shownMenu === 'religiosos' ? '' : 'hidden'} overflow-hidden`}
           >
             <li>
               <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
