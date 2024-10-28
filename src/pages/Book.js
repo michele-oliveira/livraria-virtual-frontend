@@ -172,7 +172,7 @@ const Book = () => {
   useEffect(() => {
     fetchBook(params.bookId);
     checkIsFavorite(params.bookId);
-  }, []);
+  }, [params.bookId]);
 
   return (
     <div className="bg-gray-100">
