@@ -13,7 +13,7 @@ const Header = () => {
   const searchBooks = async (search) => {
     try {
       if (search) {
-        const books = await getBooks(search);
+        const { books } = await getBooks(search, 1, 10);
         setSuggestions(books);
       } else {
         setSuggestions([]);
@@ -81,24 +81,31 @@ const Header = () => {
               </button>
             </div>
             {suggestions.length > 0 && (
-              <div className="flex items-center w-full border mt-2 p-1 rounded-md bg-white border-gray-300 shadow-lg z-50">
+              <div className="absolute top-full mt-2 max-h-48 overflow-y-auto w-full border p-1 rounded-md bg-white border-gray-300 shadow-lg z-50">
                 {suggestions.map((suggestion) => (
-                  <div className="flex flex-row" key={suggestion.id}>
-                    <img
-                      src={suggestion.image_1}
-                      alt={`Contem a capa do livro ${suggestion.book_name}`}
-                      className="h-12"
-                    />
+                  <div className="flex flex-row m-1" key={suggestion.id}>
+                    <div className="h-12 w-8">
+                      <img
+                        src={suggestion.image_1}
+                        alt={`Contem a capa do livro ${suggestion.book_name}`}
+                        className="h-12 object-cover"
+                      />
+                    </div>
                     <div className="ml-2">
                       <h5>{suggestion.book_name}</h5>
-                      <p>{suggestion.author}</p>
+                      <p className="text-sm text-slate-600">{suggestion.author}</p>
                     </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
+
           <div className="flex gap-4 mt-4 md:mt-0 ">
+            {/* <div className="flex items-center text-sm pr-5">
+              <p className="text-slate-900">Olá, fulano!</p>.
+              <p className="text-red-950">Sair</p>
+            </div> */}
             <span className="text-slate-700 bg-slate-200 rounded-md p-2 h-8 hover:bg-slate-400">
               <Link to="/login">
                 <ion-icon name="person"></ion-icon>
