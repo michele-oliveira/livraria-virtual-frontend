@@ -1,14 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import { getBooks } from "../api/books/books.api";
+import { deleteJwt } from "../utils/jwt";
 
 import logo from "../assets/images/png-transparent-drawing-graphy-tree-of-life-others-removebg-preview.png";
 
 const Header = () => {
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [showProfilePopover, setShowProfilePopover] = useState(false);
 
   const navigate = useNavigate();
+  const { user, clearUser } = useAuth();
+  const profilePopoverRef = useRef(null);
 
   const searchBooks = async (search) => {
     try {
@@ -31,6 +36,29 @@ const Header = () => {
     navigate(`/?search=${search}`);
   };
 
+  const handleClickProfile = () => {
+    if (user) {
+      setShowProfilePopover(true);
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const handleLogout = () => {
+    clearUser();
+    deleteJwt();
+    navigate("/login");
+  };
+
+  const handleCloseProfile = (e) => {
+    if (
+      profilePopoverRef.current &&
+      !profilePopoverRef.current.contains(e.target)
+    ) {
+      setShowProfilePopover(false);
+    }
+  };
+
   useEffect(() => {
     if (!search) {
       setSuggestions([]);
@@ -44,6 +72,14 @@ const Header = () => {
       };
     }
   }, [search]);
+
+  useEffect(() => {
+    document.addEventListener("click", handleCloseProfile, true);
+
+    return () => {
+      document.removeEventListener("click", handleCloseProfile, true);
+    };
+  }, []);
 
   return (
     <>
@@ -93,7 +129,9 @@ const Header = () => {
                     </div>
                     <div className="ml-2">
                       <h5>{suggestion.book_name}</h5>
-                      <p className="text-sm text-slate-600">{suggestion.author}</p>
+                      <p className="text-sm text-slate-600">
+                        {suggestion.author}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -101,13 +139,9 @@ const Header = () => {
             )}
           </div>
 
-          <div className="flex gap-4 mt-4 md:mt-0 ">
-            {/* <div className="flex items-center text-sm pr-5">
-              <p className="text-slate-900">Olá, fulano!</p>.
-              <p className="text-red-950">Sair</p>
-            </div> */}
+          <div className="relative flex gap-4 mt-4 md:mt-0">
             <span className="text-slate-700 bg-slate-200 rounded-md p-2 h-8 hover:bg-slate-400">
-              <Link to="/login">
+              <Link onClick={handleClickProfile}>
                 <ion-icon name="person"></ion-icon>
               </Link>
             </span>
@@ -116,6 +150,28 @@ const Header = () => {
                 <ion-icon name="heart"></ion-icon>
               </Link>
             </span>
+
+            {showProfilePopover && (
+              <div
+                ref={profilePopoverRef}
+                className="absolute min-w-36 max-w-48 right-0 top-full mt-2 z-20 p-3 rounded-md shadow-lg bg-white border"
+              >
+                <div className="flex flex-col flex-1">
+                  <h6 className="text-slate-700">Olá, {user.name}!</h6>
+
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="mt-2 p-0 max-w-fit self-end"
+                  >
+                    <span className="flex items-center text-red-700 hover:text-red-800">
+                      <p className="mr-1 text-[0.95rem]">Sair</p>
+                      <ion-icon name="log-out-outline"></ion-icon>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </header>
