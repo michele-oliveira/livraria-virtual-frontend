@@ -1,31 +1,35 @@
 import { useState } from "react";
-import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import toast from "../components/react-stacked-toast";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
+import Footer from "../components/Footer";
 import { login, registerUser } from "../api/users/users.api";
-import { useNavigate } from "react-router-dom";
-import toast from "../components/react-stacked-toast";
+import { saveJwt } from "../utils/jwt";
 
 const Login = () => {
   const [loginForm, setLoginForm] = useState();
   const [registerForm, setRegisterForm] = useState();
 
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   const onChangeLoginForm = (propName, value) => {
-    setLoginForm({...loginForm, [propName]: value })
+    setLoginForm({ ...loginForm, [propName]: value });
   };
 
   const onChangeRegisterForm = (propName, value) => {
-    setRegisterForm({ ...registerForm, [propName]: value })
+    setRegisterForm({ ...registerForm, [propName]: value });
   };
 
   const onSubmitLoginForm = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const token = await login(loginForm);
-      localStorage.setItem("accessToken", token.accessToken);
-      navigate("/")
+      saveJwt(token.accessToken);
+      setUser(token.accessToken);
+      navigate("/");
     } catch (error) {
       toast({
         title: "Usário e/ou senha incorreto(s)",
@@ -34,10 +38,10 @@ const Login = () => {
         duration: 2500,
       });
     }
-  }
+  };
 
   const onSubmitRegisterForm = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       await registerUser(registerForm);
       toast({
@@ -53,7 +57,7 @@ const Login = () => {
         duration: 2500,
       });
     }
-  }
+  };
 
   return (
     <div className="bg-gray-100">
