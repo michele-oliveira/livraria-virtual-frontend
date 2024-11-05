@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { RouterProvider } from 'react-router-dom';
-import router from './routes';
 import { Toaster } from 'react-stacked-toast';
+import { RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { BooksProvider } from './context/BooksContext';
+import router from './routes';
+
+import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,7 +15,9 @@ root.render(
   <>
     <Toaster />
     <AuthProvider>
-      <RouterProvider router={router}/>
+      <BooksProvider>
+        <RouterProvider router={router}/>
+      </BooksProvider>
     </AuthProvider>
   </>
   // </React.StrictMode>
