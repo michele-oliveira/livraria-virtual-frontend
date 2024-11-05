@@ -73,7 +73,7 @@ function App() {
       const jwt = getJwt();
       if (jwt) {
         const { books } = await getFavoriteBooks();
-        const favoriteBooksIds = books.map((book) => book.id);
+        const favoriteBooksIds = books?.map((book) => book.id) || [];
         setFavoriteBooks(favoriteBooksIds);
       }
     } catch (error) {
