@@ -1,19 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useBooks } from "../hooks/useBooks";
 
 const Nav = () => {
   const [shownMenu, setShownMenu] = useState(null);
 
+  const { bookGenders, loading, error } = useBooks();
+
   const handleClickMenu = useCallback(
     (event) => {
-      const menus = [
-        "acao",
-        "cientificos",
-        "economia",
-        "ficcaocientifica",
-        "romance",
-        "religiosos",
-      ];
+      const menus = bookGenders.map(gender => `menu-${gender.id}`);
 
       if (menus.includes(event.target.id)) {
         if (event.target.id === shownMenu) {
@@ -25,8 +21,10 @@ const Nav = () => {
         setShownMenu(null);
       }
     },
-    [shownMenu]
+    [shownMenu, bookGenders]
   );
+
+  const isMenuVisible = (genderId) => shownMenu === `menu-${genderId}`;
 
   useEffect(() => {
     document.addEventListener("click", handleClickMenu, true);
@@ -36,6 +34,10 @@ const Nav = () => {
     };
   }, [handleClickMenu]);
 
+  if (loading || error || !bookGenders) {
+    return null;
+  }
+
   return (
     <nav className="relative flex justify-center items-center text-sm pt-7 gap-10 sm:gap-20 z-20">
       <Link to="/">
@@ -44,194 +46,31 @@ const Nav = () => {
         </span>
       </Link>
       <ul className="flex flex-wrap justify-center gap-6 sm:gap-10">
-        <li className="relative group">
-          <Link
-            to="#"
-            id="acao"
-            className="py-3 text-slate-600 hover:text-gray-600"
-          >
-            Ação
-          </Link>
-          <ul
-            id="acao-submenu"
-            className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${
-              shownMenu === "acao" ? "" : "hidden"
-            } overflow-hidden`}
-          >
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Aventura
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Espionagem
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Policial
-              </Link>
-            </li>
-          </ul>
-        </li>
-        <li className="relative group">
-          <Link
-            to="#"
-            id="cientificos"
-            className="py-3 text-slate-600 hover:text-gray-600"
-          >
-            Científicos
-          </Link>
-          <ul
-            id="cientificos-submenu"
-            className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${
-              shownMenu === "cientificos" ? "" : "hidden"
-            } overflow-hidden`}
-          >
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Astronomia
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Biologia
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Física
-              </Link>
-            </li>
-          </ul>
-        </li>
-
-        <li className="relative group">
-          <Link
-            to="#"
-            id="economia"
-            className="py-3 text-slate-600 hover:text-gray-600"
-          >
-            Economia
-          </Link>
-          <ul
-            id="economia-submenu"
-            className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${
-              shownMenu === "economia" ? "" : "hidden"
-            } overflow-hidden`}
-          >
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Microeconomia
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Macroeconomia
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Economia internacional
-              </Link>
-            </li>
-          </ul>
-        </li>
-
-        <li className="relative group">
-          <Link
-            to="#"
-            id="ficcaocientifica"
-            className="py-3 text-slate-600 hover:text-gray-600"
-          >
-            Ficção Científica
-          </Link>
-          <ul
-            id="ficcaocientifica-submenu"
-            className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${
-              shownMenu === "ficcaocientifica" ? "" : "hidden"
-            } overflow-hidden`}
-          >
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Space Opera
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Cyberpunk
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Distopia
-              </Link>
-            </li>
-          </ul>
-        </li>
-        <li className="relative group">
-          <Link
-            to="#"
-            id="romance"
-            className="py-3 text-slate-600 hover:text-gray-600"
-          >
-            Romance
-          </Link>
-          <ul
-            id="romance-submenu"
-            className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${
-              shownMenu === "romance" ? "" : "hidden"
-            } overflow-hidden`}
-          >
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Históricos
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Conteporâneo
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Policial
-              </Link>
-            </li>
-          </ul>
-        </li>
-        <li className="relative group">
-          <Link
-            to="#"
-            id="religiosos"
-            className="py-3 text-slate-600 hover:text-gray-600"
-          >
-            Religiosos
-          </Link>
-          <ul
-            id="religiosos-submenu"
-            className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${
-              shownMenu === "religiosos" ? "" : "hidden"
-            } overflow-hidden`}
-          >
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Espiritismo
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Cristianismo
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
-                Islamismo
-              </Link>
-            </li>
-          </ul>
-        </li>
+        {bookGenders.map(gender => (
+          <li className="relative group" key={gender.id}>
+            <Link
+              to="#"
+              id={`menu-${gender.id}`}
+              className="py-3 text-slate-600 hover:text-gray-600"
+            >
+              {gender.name}
+            </Link>
+            <ul
+              id={`submenu-${gender.id}`}
+              className={`absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-200 text-slate-600 rounded-md shadow-lg z-30 group-hover:block ${
+                isMenuVisible(gender.id) ? "" : "hidden"
+              } overflow-hidden`}
+            >
+              {gender.subgenders.map(subgender => (
+                <li key={subgender.id}>
+                  <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
+                    {subgender.name}
+                  </Link>
+              </li>  
+              ))}
+            </ul>
+          </li>
+        ))}
       </ul>
     </nav>
   );
