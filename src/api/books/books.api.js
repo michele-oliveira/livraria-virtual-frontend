@@ -1,3 +1,19 @@
+export const getBookGenders = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/books/list-genders`,
+    );
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    const subgenders = await response.json();
+    return subgenders;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export const getBooks = async (searchParam, page, limit) => {
   try {
     const response = await fetch(
