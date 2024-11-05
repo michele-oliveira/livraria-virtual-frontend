@@ -11,7 +11,7 @@ import { BooksContext } from "../context/BooksContext";
 /**
  * Gender object shape.
  * @typedef {Object} Gender
- * @property {string} id
+ * @property {number} id
  * @property {string} name
  * @property {Subgender[]} subgenders
  */
