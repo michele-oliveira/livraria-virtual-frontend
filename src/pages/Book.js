@@ -46,7 +46,8 @@ const BookItem = ({ data: book, isFavorite, handleClickHeartButton }) => (
       <p className="text-gray-500">Editora: {book.publisher}</p>
       <p className="text-gray-500">Idioma: {book.language}</p>
       <p className="text-gray-500">Páginas: {book.pages}</p>
-      <p className="text-gray-500">Gênero: {book.gender}</p>
+      <p className="text-gray-500">Gênero: {book.subgender.gender.name}</p>
+      <p className="text-gray-500">Subgênero: {book.subgender.name}</p>
       {book.description.split("\n").map((p, index) => (
         <p className="text-gray-700 leading-relaxed text-sm mt-4" key={index}>
           {p}
@@ -86,8 +87,8 @@ const Book = () => {
     try {
       const jwt = getJwt();
       if (jwt) {
-        const favoriteBooks = await getFavoriteBooks();
-        if (favoriteBooks.find((book) => book.id === bookId)) {
+        const { books } = await getFavoriteBooks();
+        if (books?.find((book) => book.id === bookId)) {
           setIsFavorite(true);
         }
       }
