@@ -191,21 +191,27 @@ function App() {
                   transform: `translateX(${-currentSlide * 100}%)`,
                 }}
               >
-                <img
-                  className="h-48 sm:h-64 md:h-96 2xl:h-[48rem] w-full object-cover flex-shrink-0"
-                  src={card}
-                  alt="Card 1"
-                />
-                <img
-                  className="h-48 sm:h-64 md:h-96 2xl:h-[48rem] w-full object-cover flex-shrink-0"
-                  src={card2}
-                  alt="Card 2"
-                />
-                <img
-                  className="h-48 sm:h-64 md:h-96 2xl:h-[48rem] w-full object-cover flex-shrink-0"
-                  src={card3}
-                  alt="Card 3"
-                />
+                <div className="min-w-full overflow-hidden">
+                  <img
+                    className="h-48 sm:h-64 md:h-96 2xl:h-[48rem] w-full object-cover flex-shrink-0 transform scale-125 md:scale-100 transition-transform duration-300"
+                    src={card}
+                    alt="Card 1"
+                    />
+                </div>
+                <div className="min-w-full overflow-hidden">
+                  <img
+                    className="h-48 sm:h-64 md:h-96 2xl:h-[48rem] w-full object-cover flex-shrink-0 transform scale-125 md:scale-100 transition-transform duration-300"
+                    src={card2}
+                    alt="Card 2"
+                    />
+                </div>
+                <div className="min-w-full overflow-hidden">
+                  <img
+                    className="h-48 sm:h-64 md:h-96 2xl:h-[48rem] w-full object-cover flex-shrink-0 transform scale-125 md:scale-100 transition-transform duration-300"
+                    src={card3}
+                    alt="Card 3"
+                    />
+                </div>
               </div>
               <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-4 flex space-x-2">
                 <button
