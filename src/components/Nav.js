@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import toast from "./react-stacked-toast";
 import { useBooks } from "../hooks/useBooks";
 
 const Nav = () => {
@@ -25,6 +26,18 @@ const Nav = () => {
   );
 
   const isMenuVisible = (genderId) => shownMenu === `menu-${genderId}`;
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "Erro ao carregar detalhes adicionais do livro",
+        description:
+          "Encontramos um erro ao carregar os gêneros e subgêneros dos livros. Tente novamente ou  verifique sua conexão",
+        type: 'error',
+        duration: 3000,
+      });
+    }
+  }, [error])
 
   useEffect(() => {
     document.addEventListener("click", handleClickMenu, true);
