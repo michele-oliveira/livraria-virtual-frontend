@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { getBook, newBook, updateBook } from "../api/books/books.api";
+import { useNavigate, useParams } from "react-router-dom";
+import { useBooks } from "../hooks/useBooks";
 import toast from "../components/react-stacked-toast";
+import Loading from "../components/Loading";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
+import SelectInput from "../components/SelectInput";
 import ImageDrop from "../components/ImageDrop";
 import PdfDrop from "../components/PdfDrop";
-import { useNavigate, useParams } from "react-router-dom";
 import { getFileFromUrl } from "../utils/files";
-import Loading from "../components/Loading";
 
 const AdminPage = () => {
   const [loading, setLoading] = useState(false);
@@ -18,15 +20,18 @@ const AdminPage = () => {
     publisher: "",
     pages: "",
     gender: "",
+    subgender: "",
     description: "",
     language: "",
     image1: null,
     image2: null,
     file: null,
   });
+  const [bookSubgenders, setBookSubgenders] = useState([]);
 
   const navigate = useNavigate();
   const { bookId } = useParams();
+  const { bookGenders, loading: bookGendersLoading, error } = useBooks();
 
   const onChangeBookForm = (propName, value) => {
     setBookForm({ ...bookForm, [propName]: value });
@@ -39,6 +44,7 @@ const AdminPage = () => {
       publisher: "",
       pages: "",
       gender: "",
+      subgender: "",
       description: "",
       language: "",
       image1: null,
@@ -56,7 +62,7 @@ const AdminPage = () => {
       formData.append("author", bookForm.author);
       formData.append("publisher", bookForm.publisher);
       formData.append("pages", bookForm.pages);
-      formData.append("gender", bookForm.gender);
+      formData.append("subgender_id", bookForm.subgender);
       formData.append("description", bookForm.description);
       formData.append("language", bookForm.language);
       if (bookForm.image1) formData.append("image_1", bookForm.image1);
@@ -91,6 +97,19 @@ const AdminPage = () => {
   };
 
   useEffect(() => {
+    if (error) {
+      toast({
+        title: "Erro ao carregar detalhes adicionais do livro",
+        description:
+          "Encontramos um erro ao carregar os gêneros e subgêneros dos livros. Tente novamente ou  verifique sua conexão",
+        type: 'error',
+        duration: 3000,
+      });
+      navigate("/");
+    }
+  }, [error, navigate])
+
+  useEffect(() => {
     (async () => {
       try {
         if (bookId) {
@@ -107,7 +126,8 @@ const AdminPage = () => {
               author: book.author,
               publisher: book.publisher,
               pages: book.pages,
-              gender: book.gender,
+              gender: book.subgender.gender.id,
+              subgender: book.subgender.id,
               description: book.description,
               language: book.language,
               image1: image1File,
@@ -131,6 +151,22 @@ const AdminPage = () => {
       }
     })();
   }, [bookId, navigate]);
+
+  useEffect(() => {
+    if (bookForm.gender) {
+      const genderId = parseInt(bookForm.gender);
+      const gender = bookGenders.find(gender => gender.id === genderId);
+      gender && setBookSubgenders(gender.subgenders);
+    }
+  }, [bookForm.gender, bookGenders]);
+
+  if (bookGendersLoading || !bookGenders) {
+    return (
+      <div id="loading-info" className="flex flex-1 h-full w-full justify-center">
+        <Loading text="Carregando informações..." />
+      </div>
+    );
+  }
 
   if (loading) {
     return <Loading text="Buscando livro..." />;
@@ -216,19 +252,20 @@ const AdminPage = () => {
             </div>
 
             <div className="mb-4">
-              <label
-                htmlFor="gender"
-                className="block text-sm font-medium text-text-light"
-              >
-                Gênero
-              </label>
-              <input
-                type="text"
-                id="gender"
+              <SelectInput
+                label="Gênero"
+                options={bookGenders.map(gender => ({ label: gender.name, value: gender.id }))}
                 value={bookForm.gender}
                 onChange={(e) => onChangeBookForm("gender", e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
-                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <SelectInput
+                label="Subgênero"
+                options={bookSubgenders.map(subgender => ({ label: subgender.name, value: subgender.id }))}
+                value={bookForm.subgender}
+                onChange={(e) => onChangeBookForm("subgender", e.target.value)}
               />
             </div>
 
