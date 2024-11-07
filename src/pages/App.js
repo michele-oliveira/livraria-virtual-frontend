@@ -192,17 +192,17 @@ function App() {
                 }}
               >
                 <img
-                  className="h-48 sm:h-64 md:h-96 w-full object-cover flex-shrink-0"
+                  className="h-48 sm:h-64 md:h-96 2xl:h-[48rem] w-full object-cover flex-shrink-0"
                   src={card}
                   alt="Card 1"
                 />
                 <img
-                  className="h-48 sm:h-64 md:h-96 w-full object-cover flex-shrink-0"
+                  className="h-48 sm:h-64 md:h-96 2xl:h-[48rem] w-full object-cover flex-shrink-0"
                   src={card2}
                   alt="Card 2"
                 />
                 <img
-                  className="h-48 sm:h-64 md:h-96 w-full object-cover flex-shrink-0"
+                  className="h-48 sm:h-64 md:h-96 2xl:h-[48rem] w-full object-cover flex-shrink-0"
                   src={card3}
                   alt="Card 3"
                 />
