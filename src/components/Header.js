@@ -9,6 +9,7 @@ import logo from "../assets/images/png-transparent-drawing-graphy-tree-of-life-o
 const Header = () => {
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [isSearchInputFocused, setIsSearchInputFocused] = useState(false);
   const [showProfilePopover, setShowProfilePopover] = useState(false);
 
   const navigate = useNavigate();
@@ -106,8 +107,10 @@ const Header = () => {
               <input
                 value={search}
                 onChange={handleChangeSearch}
-                className="flex-grow pl-2 text-slate-500 text-sm h-full outline-none"
+                onFocus={() => setIsSearchInputFocused(true)}
+                onBlur={() => setIsSearchInputFocused(false)}
                 placeholder="Buscar"
+                className="flex-grow pl-2 text-slate-500 text-sm h-full outline-none"
               />
               <button type="button" onClick={handleSearch}>
                 <ion-icon
@@ -116,7 +119,7 @@ const Header = () => {
                 ></ion-icon>
               </button>
             </div>
-            {suggestions.length > 0 && (
+            {isSearchInputFocused && suggestions.length > 0 && (
               <div className="absolute top-full mt-2 max-h-48 overflow-y-auto w-full border p-1 rounded-md bg-white border-gray-300 shadow-lg z-50">
                 {suggestions.map((suggestion) => (
                   <div className="flex flex-row m-1" key={suggestion.id}>
