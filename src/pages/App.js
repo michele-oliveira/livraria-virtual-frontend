@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import toast from "../components/react-stacked-toast";
 import Header from "../components/Header.js";
+import Carousel from "../components/Carousel.js";
 import Nav from "../components/Nav.js";
 import Loading from "../components/Loading.js";
+import List from "../components/List.js";
 import BooksCard from "../components/BooksCard.js";
 import Pagination from "../components/Pagination.js";
 import Footer from "../components/Footer.js";
@@ -17,13 +19,7 @@ import { getJwt } from "../utils/jwt.js";
 import { ITEMS_PER_PAGE } from "../constants/config.js";
 import UnauthorizedError from "../errors/http/UnauthorizedError.js";
 
-import card from "../assets/images/car1.png";
-import card2 from "../assets/images/card2.png";
-import card3 from "../assets/images/card3.png";
-import List from "../components/List.js";
-
 function App() {
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [books, setBooks] = useState();
   const [favoriteBooks, setFavoriteBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,21 +27,6 @@ function App() {
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
-  const intervalTime = 5000;
-  const totalSlides = 3;
-
-  const goToNextSlide = useCallback(
-    function goToNextSlide() {
-      const newSlide = currentSlide + 1 >= totalSlides ? 0 : currentSlide + 1;
-      setCurrentSlide(newSlide);
-    },
-    [currentSlide]
-  );
-
-  function goToSlide(slide) {
-    setCurrentSlide(slide);
-  }
 
   const fetchBooks = async (search, page) => {
     try {
@@ -169,72 +150,12 @@ function App() {
     fetchBooks(search, currentPage);
   }, [searchParams, currentPage]);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      goToNextSlide();
-    }, intervalTime);
-
-    return () => clearInterval(intervalId);
-  }, [goToNextSlide]);
-
   return (
     <>
       <div className="bg-gray-100">
         <div>
           <Header />
-          <header className="App-header">
-            <div className="relative w-full overflow-hidden pt-5 z-10">
-              <div
-                className="flex transition-transform duration-700 ease-in-out"
-                id="carousel"
-                style={{
-                  transform: `translateX(${-currentSlide * 100}%)`,
-                }}
-              >
-                <div className="min-w-full overflow-hidden">
-                  <img
-                    className="h-48 sm:h-64 md:h-96 2xl:h-[48rem] w-full object-cover flex-shrink-0 transform scale-125 md:scale-100 transition-transform duration-300"
-                    src={card}
-                    alt="Card 1"
-                    />
-                </div>
-                <div className="min-w-full overflow-hidden">
-                  <img
-                    className="h-48 sm:h-64 md:h-96 2xl:h-[48rem] w-full object-cover flex-shrink-0 transform scale-125 md:scale-100 transition-transform duration-300"
-                    src={card2}
-                    alt="Card 2"
-                    />
-                </div>
-                <div className="min-w-full overflow-hidden">
-                  <img
-                    className="h-48 sm:h-64 md:h-96 2xl:h-[48rem] w-full object-cover flex-shrink-0 transform scale-125 md:scale-100 transition-transform duration-300"
-                    src={card3}
-                    alt="Card 3"
-                    />
-                </div>
-              </div>
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-4 flex space-x-2">
-                <button
-                  className={`w-3 h-3 ${
-                    currentSlide === 0 ? "bg-gray-800" : "bg-gray-400"
-                  } rounded-full indicator`}
-                  onClick={() => goToSlide(0)}
-                ></button>
-                <button
-                  className={`w-3 h-3 ${
-                    currentSlide === 1 ? "bg-gray-800" : "bg-gray-400"
-                  } rounded-full indicator`}
-                  onClick={() => goToSlide(1)}
-                ></button>
-                <button
-                  className={`w-3 h-3 ${
-                    currentSlide === 2 ? "bg-gray-800" : "bg-gray-400"
-                  } rounded-full indicator`}
-                  onClick={() => goToSlide(2)}
-                ></button>
-              </div>
-            </div>
-          </header>
+          <Carousel />
         </div>
         <Nav />
         <section className="pt-10 p-5">
