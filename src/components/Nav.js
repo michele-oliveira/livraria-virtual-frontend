@@ -78,7 +78,10 @@ const Nav = () => {
             >
               {gender.subgenders.map(subgender => (
                 <li key={subgender.id}>
-                  <Link to="#" className="block px-4 py-2 hover:bg-slate-300">
+                  <Link
+                    to={`/?subgender_id=${subgender.id}`}
+                    className="block px-4 py-2 hover:bg-slate-300"
+                  >
                     {subgender.name}
                   </Link>
               </li>  

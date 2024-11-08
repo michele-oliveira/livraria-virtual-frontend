@@ -1,7 +1,7 @@
 export const getBookGenders = async () => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/books/list-genders`,
+      `${process.env.REACT_APP_BACKEND_URL}/books/list-genders`
     );
     if (!response.ok) {
       throw new Error(response.statusText);
@@ -12,15 +12,25 @@ export const getBookGenders = async () => {
     console.log(error);
     throw error;
   }
-}
+};
 
-export const getBooks = async (searchParam, page, limit) => {
+export const getBooks = async (
+  searchParam,
+  page,
+  limit,
+  subgenderId = null
+) => {
+  let url;
+  if (searchParam) {
+    url = `${process.env.REACT_APP_BACKEND_URL}/books?search=${searchParam}&page=${page}&limit=${limit}`;
+  } else if (subgenderId) {
+    url = `${process.env.REACT_APP_BACKEND_URL}/books/by-subgender/${subgenderId}?page=${page}&limit=${limit}`;
+  } else {
+    url = `${process.env.REACT_APP_BACKEND_URL}/books?page=${page}&limit=${limit}`;
+  }
+
   try {
-    const response = await fetch(
-      searchParam
-        ? `${process.env.REACT_APP_BACKEND_URL}/books?search=${searchParam}&page=${page}&limit=${limit}`
-        : `${process.env.REACT_APP_BACKEND_URL}/books?page=${page}&limit=${limit}`
-    );
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(response.statusText);
     }

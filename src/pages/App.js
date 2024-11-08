@@ -28,12 +28,13 @@ function App() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const fetchBooks = async (search, page) => {
+  const fetchBooks = async (search, page, subgenderId) => {
     try {
       const { books, totalPages } = await getBooks(
         search,
         page,
-        ITEMS_PER_PAGE
+        ITEMS_PER_PAGE,
+        subgenderId,
       );
       setBooks(books);
       setTotalPages(totalPages);
@@ -146,8 +147,9 @@ function App() {
 
   useEffect(() => {
     const search = searchParams.get("search");
+    const subgenderId = searchParams.get("subgender_id");
 
-    fetchBooks(search, currentPage);
+    fetchBooks(search, currentPage, subgenderId);
   }, [searchParams, currentPage]);
 
   return (
