@@ -5,6 +5,8 @@ import card3 from "../assets/images/card3.png";
 
 function Carousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [touchStartX, setTouchStartX] = useState(null);
+  const [touchEndX, setTouchEndX] = useState(null);
 
   const totalSlides = 3;
   const intervalTime = 5000;
@@ -17,9 +19,39 @@ function Carousel() {
     [currentSlide]
   );
 
+  const goToPreviousSlide = useCallback(() => {
+    setCurrentSlide((prevSlide) =>
+      prevSlide - 1 < 0 ? totalSlides - 1 : prevSlide - 1
+    );
+  }, []);
+
   function goToSlide(slide) {
     setCurrentSlide(slide);
   }
+
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEndX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+
+    const swipeDistance = touchStartX - touchEndX;
+    const swipeThreshold = 50;
+
+    if (swipeDistance > swipeThreshold) {
+      goToNextSlide();
+    } else if (swipeDistance < -swipeThreshold) {
+      goToPreviousSlide();
+    }
+
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -31,7 +63,12 @@ function Carousel() {
 
   return (
     <header className="App-header">
-      <div className="relative w-full overflow-hidden pt-5 z-10">
+      <div
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        className="relative w-full overflow-hidden pt-5 z-10"
+      >
         <div
           className="flex transition-transform duration-700 ease-in-out"
           id="carousel"
