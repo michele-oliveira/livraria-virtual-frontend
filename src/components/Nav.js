@@ -52,13 +52,15 @@ const Nav = () => {
   }
 
   return (
-    <nav className="relative flex justify-center items-center text-sm pt-7 gap-10 sm:gap-20 z-20">
-      <Link to="/">
-        <span className="text-slate-600 bg-slate-300 rounded-md p-2 hover:bg-slate-500">
-          <ion-icon name="home"></ion-icon>
-        </span>
-      </Link>
-      <ul className="flex flex-wrap justify-center gap-6 sm:gap-10">
+    <nav className="relative flex pt-7 text-sm gap-10 sm:gap-20 z-20 justify-center items-center ">
+      <ul className="flex flex-wrap max-w-72 md:max-w-[32rem] lg:max-w-[42rem] gap-6 sm:gap-10 justify-center">
+        <li>
+        <Link to="/">
+          <span className="p-2 text-slate-600 bg-slate-300 rounded-md hover:bg-slate-500">
+            <ion-icon name="home"></ion-icon>
+          </span>
+        </Link>
+        </li>
         {bookGenders.map(gender => (
           <li className="relative group" key={gender.id}>
             <Link
