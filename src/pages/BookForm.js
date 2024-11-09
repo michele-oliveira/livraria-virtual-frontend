@@ -12,7 +12,7 @@ import ImageDrop from "../components/ImageDrop";
 import PdfDrop from "../components/PdfDrop";
 import { getFileFromUrl } from "../utils/files";
 
-const AdminPage = () => {
+const BookForm = () => {
   const [loading, setLoading] = useState(false);
   const [bookForm, setBookForm] = useState({
     bookName: "",
@@ -360,4 +360,4 @@ const AdminPage = () => {
   );
 };
 
-export default AdminPage;
+export default BookForm;

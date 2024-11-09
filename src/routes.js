@@ -4,7 +4,7 @@ import Form from "./pages/Form";
 import Heart from "./pages/Heart";
 import Login from "./pages/Login";
 import Book from "./pages/Book";
-import AdminPage from "./pages/AdminPage";
+import BookForm from "./pages/BookForm";
 
 const router = createBrowserRouter([
     {
@@ -28,12 +28,12 @@ const router = createBrowserRouter([
         element: <Book/>,
     },
     {
-        path: "/admin",
-        element: <AdminPage/>,
+        path: "/new-book",
+        element: <BookForm/>,
     },
     {
-        path: "/admin/:bookId",
-        element: <AdminPage/>,
+        path: "/edit-book/:bookId",
+        element: <BookForm/>,
     },
 
 ]);
