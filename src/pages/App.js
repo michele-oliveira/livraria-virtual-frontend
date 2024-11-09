@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth.js";
 import toast from "../components/react-stacked-toast";
 import Header from "../components/Header.js";
 import Carousel from "../components/Carousel.js";
@@ -16,6 +17,7 @@ import {
   removeBookFromFavorites,
 } from "../api/users/users.api.js";
 import { getJwt } from "../utils/jwt.js";
+import { UserRole } from "../enums/UserRole.js";
 import { ITEMS_PER_PAGE } from "../constants/config.js";
 import UnauthorizedError from "../errors/http/UnauthorizedError.js";
 
@@ -27,6 +29,7 @@ function App() {
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { user } = useAuth();
 
   const fetchBooks = async (search, page, subgenderId) => {
     try {
@@ -204,6 +207,21 @@ function App() {
       />
 
       <Footer />
+
+      {user.role === UserRole.ADMIN && (
+        <div className="fixed bottom-6 right-5">
+          <button
+            type="button"
+            onClick={() => navigate('/new-book')}
+            className="flex items-center px-3 py-2 rounded-lg bg-slate-800 hover:brightness-125"
+          >
+            <span className="flex text-xl text-white">
+              <ion-icon name="add-outline"></ion-icon>
+            </span>
+            <h5 className="ml-1 text-white font-semibold">Novo livro</h5>
+          </button>
+        </div>
+      )}
     </>
   );
 }
