@@ -208,7 +208,7 @@ function App() {
 
       <Footer />
 
-      {user.role === UserRole.ADMIN && (
+      {user?.role === UserRole.ADMIN && (
         <div className="fixed bottom-6 right-5">
           <button
             type="button"
