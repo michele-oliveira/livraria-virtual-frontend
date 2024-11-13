@@ -148,11 +148,13 @@ const Header = () => {
                 <ion-icon name="person"></ion-icon>
               </Link>
             </span>
-            <span className="text-slate-700 bg-slate-200 rounded-md p-2 h-8 hover:bg-slate-400">
-              <Link to="/favorites">
-                <ion-icon name="heart"></ion-icon>
-              </Link>
-            </span>
+            {user?.role === 'USER' && (
+              <span className="text-slate-700 bg-slate-200 rounded-md p-2 h-8 hover:bg-slate-400">
+                <Link to="/favorites">
+                  <ion-icon name="heart"></ion-icon>
+                </Link>
+              </span>
+            )}
 
             {showProfilePopover && (
               <div
