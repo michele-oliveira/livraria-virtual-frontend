@@ -85,7 +85,7 @@ const Header = () => {
   return (
     <>
       <div className="flex justify-end gap-4 md:gap-14 text-sm items-center p-5 pb-1">
-        <Link to="#" className="hover:text-gray-600">
+        <Link to="/about" className="hover:text-gray-600">
           Sobre nós
         </Link>
         <Link to="/form" className="hover:text-gray-600">

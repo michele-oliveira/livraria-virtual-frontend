@@ -5,6 +5,7 @@ import Heart from "./pages/Heart";
 import Login from "./pages/Login";
 import Book from "./pages/Book";
 import BookForm from "./pages/BookForm";
+import About from "./pages/About";
 
 const router = createBrowserRouter([
     {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
     {
         path: "/edit-book/:bookId",
         element: <BookForm/>,
+    },
+    {
+        path: "/about",
+        element: <About/>,
     },
 
 ]);
