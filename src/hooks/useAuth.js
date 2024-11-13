@@ -7,7 +7,7 @@ import { AuthContext } from "../context/AuthContext";
  * @property {string} id
  * @property {string} name
  * @property {string} email
- * @property {string} role
+ * @property {'USER' | 'ADMIN'} role
  */
 
 /**
@@ -22,7 +22,7 @@ import { AuthContext } from "../context/AuthContext";
  */
 
 /**
- * @returns {{ user: object|null, setUser: SetUser, clearUser: ClearUser }}
+ * @returns {{ user: User|null, setUser: SetUser, clearUser: ClearUser }}
  */
 export const useAuth = () => {
   const context = useContext(AuthContext);
