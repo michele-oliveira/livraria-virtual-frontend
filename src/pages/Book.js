@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import PropTypes from 'prop-types';
 import toast from "../components/react-stacked-toast";
 import Loading from "../components/Loading";
 import Header from "../components/Header";
@@ -14,8 +15,19 @@ import {
 } from "../api/users/users.api";
 import { getJwt } from "../utils/jwt";
 import UnauthorizedError from "../errors/http/UnauthorizedError";
+import { useAuth } from "../hooks/useAuth";
+import { UserRole } from "../enums/UserRole";
 
-const BookItem = ({ data: book, isFavorite, handleClickHeartButton }) => (
+const BookItem = ({ 
+  data: book,
+  canAddFavorite,
+  isFavorite,
+  handleClickHeartButton,
+  canEdit,
+  handleClickEditButton,
+  canDelete,
+  handleClickDeleteButton
+}) => (
   <section className="flex flex-col md:flex-row p-6 rounded-lg">
     <div className="flex-shrink-0 relative p-5">
       <img
@@ -28,15 +40,39 @@ const BookItem = ({ data: book, isFavorite, handleClickHeartButton }) => (
         <button className="bg-slate-200 text-black px-2 sm:px-6 py-2 rounded-md hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 text-sm flex items-center justify-center w-32 h-12">
           Baixar
         </button>
-        <button
-          type="button"
-          onClick={handleClickHeartButton}
-          className="flex items-center justify-center w-12 h-12"
-        >
-          <span className="bg-slate-200 rounded-md p-3 hover:bg-slate-400 text-xl flex justify-center">
-            <ion-icon name={isFavorite ? "heart" : "heart-outline"}></ion-icon>
-          </span>
-        </button>
+        {(canAddFavorite && handleClickHeartButton) && (
+          <button
+            type="button"
+            onClick={handleClickHeartButton}
+            className="flex items-center justify-center w-12 h-12"
+          >
+            <span className="bg-slate-200 rounded-md p-3 hover:bg-slate-400 text-xl flex justify-center">
+              <ion-icon name={isFavorite ? "heart" : "heart-outline"}></ion-icon>
+            </span>
+          </button>
+        )}
+        {(canEdit && handleClickEditButton) && (
+          <button
+            type="button"
+            onClick={handleClickEditButton}
+            className="flex items-center justify-center w-12 h-12"
+          >
+            <span className="bg-slate-200 rounded-md p-3 hover:bg-slate-400 text-xl flex justify-center">
+              <ion-icon name="pencil-outline"></ion-icon>
+            </span>
+          </button>
+        )}
+        {(canDelete && handleClickDeleteButton) && (
+          <button
+            type="button"
+            onClick={handleClickDeleteButton}
+            className="flex items-center justify-center w-12 h-12"
+          >
+            <span className="text-red-600 bg-slate-200 rounded-md p-3 hover:bg-slate-400 text-xl flex justify-center">
+              <ion-icon name="trash-outline"></ion-icon>
+            </span>
+          </button>
+        )}
       </div>
     </div>
     <div className="flex flex-col justify-center ml-4 mt-4 bg-white border p-10 rounded-lg">
@@ -57,6 +93,17 @@ const BookItem = ({ data: book, isFavorite, handleClickHeartButton }) => (
   </section>
 );
 
+BookItem.propTypes = {
+  data: PropTypes.object.isRequired,
+  canAddFavorite: PropTypes.bool,
+  isFavorite: PropTypes.bool,
+  handleClickHeartButton: PropTypes.func,
+  canEdit: PropTypes.bool,
+  handleClickEditButton: PropTypes.func,
+  canDelete: PropTypes.bool,
+  handleClickDeleteButton: PropTypes.func,
+};
+
 const Book = () => {
   const [book, setBook] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -64,6 +111,7 @@ const Book = () => {
 
   const params = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const fetchBook = async (bookId) => {
     try {
@@ -170,6 +218,10 @@ const Book = () => {
     }
   };
 
+  const handleClickEditButton = () => {
+    navigate(`/edit-book/${params.bookId}`);
+  }
+
   useEffect(() => {
     fetchBook(params.bookId);
     checkIsFavorite(params.bookId);
@@ -184,13 +236,23 @@ const Book = () => {
       ) : (
         <Item
           data={book}
-          component={(data) => (
+          component={(data) => user?.role === UserRole.ADMIN ? (
             <BookItem
               data={data}
+              canEdit
+              handleClickEditButton={handleClickEditButton}
+              canDelete
+              handleClickDeleteButton={() => {}}
+            />
+          ) : (
+            <BookItem
+              data={data}
+              canAddFavorite
               isFavorite={isFavorite}
               handleClickHeartButton={handleClickHeartButton}
             />
-          )}
+            )
+          }
           emptyComponent={() => (
             <div className="border rounded-lg m-5 mt-10 p-5 flex flex-col justify-center items-center bg-white ">
               <p className="text-gray-800 font-bold">Livro não encontrado</p>
