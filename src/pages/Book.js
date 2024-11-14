@@ -29,13 +29,15 @@ const BookItem = ({
   canDelete,
   handleClickDeleteButton
 }) => (
-  <section className="flex flex-col md:flex-row p-6 rounded-lg">
+  <section className="flex flex-col mt-4 md:flex-row p-6 rounded-lg">
     <div className="flex-shrink-0 relative p-5">
-      <img
-        className="w-56 sm:w-64 md:w-72 rounded-lg shadow-md transition-opacity duration-300 ease-in-out group-hover:opacity-80"
-        src={book.image_1}
-        alt={`Contains the book cover of ${book.book_name}`}
-      />
+      <div className="flex justify-center">
+        <img
+          className="w-56 sm:w-64 md:w-72 rounded-lg shadow-md transition-opacity duration-300 ease-in-out group-hover:opacity-80"
+          src={book.image_1}
+          alt={`Contains the book cover of ${book.book_name}`}
+        />
+      </div>
 
       <div className="w-full flex justify-center gap-2 p-5">
         <a
@@ -82,7 +84,7 @@ const BookItem = ({
         )}
       </div>
     </div>
-    <div className="flex flex-col justify-center ml-4 mt-4 bg-white border p-10 rounded-lg">
+    <div className="flex flex-col justify-center flex-1 p-10 mt-5 md:ml-4 bg-white border rounded-lg">
       <h1 className="text-2xl font-bold text-gray-800 pb-5">
         {book.book_name.toUpperCase()}
       </h1>
