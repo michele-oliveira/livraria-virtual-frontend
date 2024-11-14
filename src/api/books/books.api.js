@@ -85,3 +85,20 @@ export const updateBook = async (updatedBookData) => {
     throw error;
   }
 };
+
+export const deleteBook = async (bookId) => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/books/${bookId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
