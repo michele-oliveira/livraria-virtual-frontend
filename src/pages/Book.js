@@ -15,6 +15,7 @@ import {
   removeBookFromFavorites,
 } from "../api/users/users.api";
 import { deleteJwt, getJwt } from "../utils/jwt";
+import { getFileNameFromDownloadUrl } from "../utils/download";
 import UnauthorizedError from "../errors/http/UnauthorizedError";
 import { UserRole } from "../enums/UserRole";
 
@@ -37,9 +38,15 @@ const BookItem = ({
       />
 
       <div className="w-full flex justify-center gap-2 p-5">
-        <button className="bg-slate-200 text-black px-2 sm:px-6 py-2 rounded-md hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 text-sm flex items-center justify-center w-32 h-12">
+        <a
+          href={book.book_file}
+          download={getFileNameFromDownloadUrl(book.book_file) || "book.pdf"}
+          target="_blank"
+          rel="noreferrer"
+          className="bg-slate-200 text-black px-2 sm:px-6 py-2 rounded-md hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 text-sm flex items-center justify-center w-32 h-12"
+        >
           Baixar
-        </button>
+        </a>
         {(canAddFavorite && handleClickHeartButton) && (
           <button
             type="button"
