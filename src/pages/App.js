@@ -31,6 +31,8 @@ function App() {
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
 
+  const canAddBookToFavorites = user?.role === UserRole.USER;
+
   const fetchBooks = async (search, page, subgenderId) => {
     try {
       const { books, totalPages } = await getBooks(
@@ -145,8 +147,10 @@ function App() {
   };
 
   useEffect(() => {
-    fetchFavoriteBooks();
-  }, []);
+    if (user?.role === UserRole.USER) {
+      fetchFavoriteBooks();
+    }
+  }, [user?.role]);
 
   useEffect(() => {
     const search = searchParams.get("search");
@@ -176,6 +180,7 @@ function App() {
                       image={book.image_1}
                       hoverImage={book.image_2}
                       title={book.book_name}
+                      canAddFavorite={canAddBookToFavorites}
                       isFavorite={favoriteBooks.includes(book.id)}
                       onClickHeart={() => handleClickHeartButton(book.id)}
                     />

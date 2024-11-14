@@ -25,13 +25,15 @@ const BooksCard = (props) => {
         <button className="bg-slate-200 text-black px-4 sm:px-6 py-2 rounded-md hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 text-sm">
           Baixar
         </button>
-        <button type="button" onClick={props.onClickHeart}>
-          <span className="bg-slate-200 rounded-md p-2 hover:bg-slate-400 text-xl flex justify-center">
-            <ion-icon
-              name={props.isFavorite ? "heart" : "heart-outline"}
-            ></ion-icon>
-          </span>
-        </button>
+        {props.canAddFavorite && props.onClickHeart && (
+          <button type="button" onClick={props.onClickHeart}>
+            <span className="bg-slate-200 rounded-md p-2 hover:bg-slate-400 text-xl flex justify-center">
+              <ion-icon
+                name={props.isFavorite ? "heart" : "heart-outline"}
+              ></ion-icon>
+            </span>
+          </button>
+        )}
       </div>
     </div>
   );
@@ -42,8 +44,9 @@ BooksCard.propTypes = {
   image: PropTypes.string.isRequired,
   hoverImage: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  isFavorite: PropTypes.bool.isRequired,
-  onClickHeart: PropTypes.func.isRequired,
+  canAddFavorite: PropTypes.bool,
+  isFavorite: PropTypes.bool,
+  onClickHeart: PropTypes.func,
 };
 
 export default BooksCard;
