@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import PropTypes from 'prop-types';
 import toast from "../components/react-stacked-toast";
 import Loading from "../components/Loading";
@@ -7,15 +8,14 @@ import Header from "../components/Header";
 import Nav from "../components/Nav";
 import Item from "../components/Item";
 import Footer from "../components/Footer";
-import { getBook } from "../api/books/books.api";
+import { deleteBook, getBook } from "../api/books/books.api";
 import {
   addBookToFavorites,
   getFavoriteBooks,
   removeBookFromFavorites,
 } from "../api/users/users.api";
-import { getJwt } from "../utils/jwt";
+import { deleteJwt, getJwt } from "../utils/jwt";
 import UnauthorizedError from "../errors/http/UnauthorizedError";
-import { useAuth } from "../hooks/useAuth";
 import { UserRole } from "../enums/UserRole";
 
 const BookItem = ({ 
@@ -111,7 +111,7 @@ const Book = () => {
 
   const params = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, clearUser } = useAuth();
 
   const fetchBook = async (bookId) => {
     try {
@@ -210,6 +210,37 @@ const Book = () => {
     }
   };
 
+  const exclude = async (bookId) => {
+    try {
+      await deleteBook(bookId);
+      toast({
+        title: "O livro foi excluído",
+        type: "success",
+        duration: 2000,
+      });
+      navigate("/");
+    } catch (error) {
+      if (error instanceof UnauthorizedError) {
+        toast({
+          title: "Acesso não permitido",
+          description: "Por favor, faça o login antes de utilizar este recurso",
+          type: "error",
+          duration: 3000,
+        });
+        clearUser();
+        deleteJwt();
+        navigate("/login");
+      } else {
+        toast({
+          title: "Houve um erro inesperado",
+          description: "Por favor, tente novamente",
+          type: "error",
+          duration: 3000,
+        });
+      }
+    }
+  }
+
   const handleClickHeartButton = () => {
     if (isFavorite) {
       removeFromFavorites(params.bookId);
@@ -220,6 +251,10 @@ const Book = () => {
 
   const handleClickEditButton = () => {
     navigate(`/edit-book/${params.bookId}`);
+  }
+
+  const handleClickDeleteButton = () => {
+    exclude(params.bookId);
   }
 
   useEffect(() => {
@@ -242,7 +277,7 @@ const Book = () => {
               canEdit
               handleClickEditButton={handleClickEditButton}
               canDelete
-              handleClickDeleteButton={() => {}}
+              handleClickDeleteButton={handleClickDeleteButton}
             />
           ) : (
             <BookItem
