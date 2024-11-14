@@ -177,9 +177,10 @@ function App() {
                     <BooksCard
                       key={book.id}
                       bookId={book.id}
+                      title={book.book_name}
                       image={book.image_1}
                       hoverImage={book.image_2}
-                      title={book.book_name}
+                      downloadUrl={book.book_file}
                       canAddFavorite={canAddBookToFavorites}
                       isFavorite={favoriteBooks.includes(book.id)}
                       onClickHeart={() => handleClickHeartButton(book.id)}
