@@ -24,7 +24,7 @@ const AuthProvider = ({ children }) => {
       id: decodedJwt.id,
       name: decodedJwt.name,
       email: decodedJwt.email,
-      role: "USER",
+      role: decodedJwt.role,
     });
   }, []);
 
