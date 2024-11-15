@@ -14,6 +14,7 @@ const Header = () => {
 
   const navigate = useNavigate();
   const { user, clearUser } = useAuth();
+  const searchInputRef = useRef(null);
   const profilePopoverRef = useRef(null);
 
   const searchBooks = async (search) => {
@@ -60,6 +61,11 @@ const Header = () => {
     }
   };
 
+  const handleClickSuggestion = (suggestion) => {
+    navigate(`/book/${suggestion.id}`);
+    searchInputRef?.current?.blur();
+  }
+
   useEffect(() => {
     if (!search) {
       setSuggestions([]);
@@ -105,6 +111,7 @@ const Header = () => {
           <div className="relative flex items-center flex-col h-8 w-full md:w-1/2 lg:w-1/3">
             <div className="flex items-center w-full h-9 border p-1 rounded-md">
               <input
+                ref={searchInputRef}
                 value={search}
                 onChange={handleChangeSearch}
                 onFocus={() => setIsSearchInputFocused(true)}
@@ -120,23 +127,32 @@ const Header = () => {
               </button>
             </div>
             {isSearchInputFocused && suggestions.length > 0 && (
-              <div className="absolute top-full mt-2 max-h-48 overflow-y-auto w-full border p-1 rounded-md bg-white border-gray-300 shadow-lg z-50">
+              <div
+                onMouseDown={(e) => e.preventDefault()}
+                className="absolute top-full mt-2 max-h-48 overflow-y-auto w-full border p-1 rounded-md bg-white border-gray-300 shadow-lg z-50"
+              >
                 {suggestions.map((suggestion) => (
-                  <div className="flex flex-row m-1" key={suggestion.id}>
-                    <div className="h-12 w-8">
-                      <img
-                        src={suggestion.image_1}
-                        alt={`Contem a capa do livro ${suggestion.book_name}`}
-                        className="h-12 object-cover"
-                      />
+                  <Link
+                    to={`/book/${suggestion.id}`}
+                    onClick={() => searchInputRef?.current?.blur()}
+                    key={suggestion.id}
+                  >
+                    <div className="flex flex-row m-1">
+                      <div className="h-12 w-8">
+                        <img
+                          src={suggestion.image_1}
+                          alt={`Contem a capa do livro ${suggestion.book_name}`}
+                          className="h-12 object-cover"
+                        />
+                      </div>
+                      <div className="ml-2">
+                        <h5>{suggestion.book_name}</h5>
+                        <p className="text-sm text-slate-600">
+                          {suggestion.author}
+                        </p>
+                      </div>
                     </div>
-                    <div className="ml-2">
-                      <h5>{suggestion.book_name}</h5>
-                      <p className="text-sm text-slate-600">
-                        {suggestion.author}
-                      </p>
-                    </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}
