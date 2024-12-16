@@ -32,7 +32,7 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       toast({
-        title: "Usário e/ou senha incorreto(s)",
+        title: "Usuário e/ou senha incorreto(s)",
         description: "Por favor, redigite as credenciais e tente novamente",
         type: "error",
         duration: 2500,
