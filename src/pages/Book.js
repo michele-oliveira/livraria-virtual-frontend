@@ -14,10 +14,10 @@ import {
   getFavoriteBooks,
   removeBookFromFavorites,
 } from "../api/users/users.api";
-import { deleteJwt, getJwt } from "../utils/jwt";
+import { deleteJwt } from "../utils/jwt";
 import { getFileNameFromDownloadUrl } from "../utils/download";
-import UnauthorizedError from "../errors/http/UnauthorizedError";
 import { UserRole } from "../enums/UserRole";
+import UnauthorizedError from "../errors/http/UnauthorizedError";
 
 const BookItem = ({ 
   data: book,
@@ -144,8 +144,7 @@ const Book = () => {
 
   const checkIsFavorite = async (bookId) => {
     try {
-      const jwt = getJwt();
-      if (jwt) {
+      if (user && user.role === UserRole.USER) {
         const { books } = await getFavoriteBooks();
         if (books?.find((book) => book.id === bookId)) {
           setIsFavorite(true);
