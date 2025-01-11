@@ -4,7 +4,7 @@ const Footer =() => (
     <footer className="bg-slate-600 text-white py-8 mt-10">
         <div className="container mx-auto px-4">
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center md:text-left">
 
                 <div>
                     <h3 className="text-lg font-bold mb-4">Sobre Nós</h3>
@@ -33,15 +33,15 @@ const Footer =() => (
 
                 <div>
                     <h3 className="text-lg font-bold mb-4">Siga-nos</h3>
-                    <div className="flex space-x-4">
-                        <Link to="#" className="text-gray-400 hover:text-white">
-                            <ion-icon name="logo-facebook" className="text-2xl"></ion-icon>
+                    <div className="flex justify-center sm:justify-start space-x-4">
+                        <Link to="#" className="text-gray-400 hover:text-white text-2xl">
+                            <ion-icon name="logo-facebook"></ion-icon>
                         </Link>
-                        <Link to="#" className="text-gray-400 hover:text-white">
-                            <ion-icon name="logo-twitter" className="text-2xl"></ion-icon>
+                        <Link to="#" className="text-gray-400 hover:text-white text-2xl">
+                            <ion-icon name="logo-twitter"></ion-icon>
                         </Link>
-                        <Link to="#" className="text-gray-400 hover:text-white">
-                            <ion-icon name="logo-instagram" className="text-2xl"></ion-icon>
+                        <Link to="#" className="text-gray-400 hover:text-white text-2xl">
+                            <ion-icon name="logo-instagram"></ion-icon>
                         </Link>
                     </div>
                 </div>
