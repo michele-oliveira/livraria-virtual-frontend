@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "../components/react-stacked-toast";
+import Container from "../components/Container";
+import Content from "../components/Content";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
 import Loading from "../components/Loading";
@@ -106,10 +108,10 @@ const Heart = () => {
   }, [currentPage, fetchFavoriteBooks]);
 
   return (
-    <div className="bg-gray-100">
+    <Container className="bg-gray-100">
       <Header />
       <Nav />
-      <section className="pt-10 mb-5">
+      <Content className="pt-10 mb-5">
         {favoriteBooks ? (
           <List
             data={favoriteBooks}
@@ -149,9 +151,9 @@ const Heart = () => {
         ) : (
           <Loading text="Carregando livros..." />
         )}
-      </section>
+      </Content>
       <Footer />
-    </div>
+    </Container>
   );
 };
 

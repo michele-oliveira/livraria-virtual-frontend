@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import toast from "../components/react-stacked-toast";
+import Container from "../components/Container";
+import Content from "../components/Content";
 import Loading from "../components/Loading";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
@@ -19,7 +21,7 @@ import { getFileNameFromDownloadUrl } from "../utils/download";
 import { UserRole } from "../enums/UserRole";
 import UnauthorizedError from "../errors/http/UnauthorizedError";
 
-const BookItem = ({ 
+const BookItem = ({
   data: book,
   canAddFavorite,
   isFavorite,
@@ -27,7 +29,7 @@ const BookItem = ({
   canEdit,
   handleClickEditButton,
   canDelete,
-  handleClickDeleteButton
+  handleClickDeleteButton,
 }) => (
   <div className="flex justify-center">
     <section className="flex flex-col mt-4 md:flex-row p-6 rounded-lg max-w-[96rem]">
@@ -50,18 +52,20 @@ const BookItem = ({
           >
             Baixar
           </a>
-          {(canAddFavorite && handleClickHeartButton) && (
+          {canAddFavorite && handleClickHeartButton && (
             <button
               type="button"
               onClick={handleClickHeartButton}
               className="flex items-center justify-center w-12 h-12"
             >
               <span className="bg-slate-200 rounded-md p-3 hover:bg-slate-400 text-xl flex justify-center">
-                <ion-icon name={isFavorite ? "heart" : "heart-outline"}></ion-icon>
+                <ion-icon
+                  name={isFavorite ? "heart" : "heart-outline"}
+                ></ion-icon>
               </span>
             </button>
           )}
-          {(canEdit && handleClickEditButton) && (
+          {canEdit && handleClickEditButton && (
             <button
               type="button"
               onClick={handleClickEditButton}
@@ -72,7 +76,7 @@ const BookItem = ({
               </span>
             </button>
           )}
-          {(canDelete && handleClickDeleteButton) && (
+          {canDelete && handleClickDeleteButton && (
             <button
               type="button"
               onClick={handleClickDeleteButton}
@@ -249,7 +253,7 @@ const Book = () => {
         });
       }
     }
-  }
+  };
 
   const handleClickHeartButton = () => {
     if (isFavorite) {
@@ -261,11 +265,11 @@ const Book = () => {
 
   const handleClickEditButton = () => {
     navigate(`/edit-book/${params.bookId}`);
-  }
+  };
 
   const handleClickDeleteButton = () => {
     exclude(params.bookId);
-  }
+  };
 
   useEffect(() => {
     fetchBook(params.bookId);
@@ -273,44 +277,47 @@ const Book = () => {
   }, [params.bookId]);
 
   return (
-    <div className="bg-gray-100">
+    <Container className="bg-gray-100">
       <Header />
       <Nav />
-      {isLoading ? (
-        <Loading text="Carregando detalhes do livro..." />
-      ) : (
-        <Item
-          data={book}
-          component={(data) => user?.role === UserRole.ADMIN ? (
-            <BookItem
-              data={data}
-              canEdit
-              handleClickEditButton={handleClickEditButton}
-              canDelete
-              handleClickDeleteButton={handleClickDeleteButton}
-            />
-          ) : (
-            <BookItem
-              data={data}
-              canAddFavorite
-              isFavorite={isFavorite}
-              handleClickHeartButton={handleClickHeartButton}
-            />
-            )
-          }
-          emptyComponent={() => (
-            <div className="border rounded-lg m-5 mt-10 p-5 flex flex-col justify-center items-center bg-white ">
-              <p className="text-gray-800 font-bold">Livro não encontrado</p>
-              <p className="mt-5 text-gray-900 text-sm">
-                O livro que você está procurando não existe ou pode ter sido
-                removido
-              </p>
-            </div>
-          )}
-        />
-      )}
+      <Content>
+        {isLoading ? (
+          <Loading text="Carregando detalhes do livro..." />
+        ) : (
+          <Item
+            data={book}
+            component={(data) =>
+              user?.role === UserRole.ADMIN ? (
+                <BookItem
+                  data={data}
+                  canEdit
+                  handleClickEditButton={handleClickEditButton}
+                  canDelete
+                  handleClickDeleteButton={handleClickDeleteButton}
+                />
+              ) : (
+                <BookItem
+                  data={data}
+                  canAddFavorite
+                  isFavorite={isFavorite}
+                  handleClickHeartButton={handleClickHeartButton}
+                />
+              )
+            }
+            emptyComponent={() => (
+              <div className="border rounded-lg m-5 mt-10 p-5 flex flex-col justify-center items-center bg-white ">
+                <p className="text-gray-800 font-bold">Livro não encontrado</p>
+                <p className="mt-5 text-gray-900 text-sm">
+                  O livro que você está procurando não existe ou pode ter sido
+                  removido
+                </p>
+              </div>
+            )}
+          />
+        )}
+      </Content>
       <Footer />
-    </div>
+    </Container>
   );
 };
 

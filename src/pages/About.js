@@ -1,14 +1,16 @@
-import Footer from "../components/Footer";
+import Container from "../components/Container";
+import Content from "../components/Content";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
+import Footer from "../components/Footer";
 
 import openBook from "../assets/images/open-book.png";
 
 const About = () => (
-  <div>
+  <Container>
     <Header />
     <Nav />
-    <div className="flex flex-col items-center px-6 md:px-16 lg:px-28 py-16 md:py-24 lg:py-32">
+    <Content className="flex flex-col items-center px-6 md:px-16 lg:px-28 py-16 md:py-24 lg:py-32">
       <h1 className="text-2xl font-bold mb-4 text-center pb-10 text-sky-950">
         Sobre a Livraria Virtual
       </h1>
@@ -34,9 +36,9 @@ const About = () => (
           alt="Livro Aberto"
         />
       </div>
-    </div>
+    </Content>
     <Footer />
-  </div>
+  </Container>
 );
 
 export default About;

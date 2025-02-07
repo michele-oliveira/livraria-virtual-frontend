@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
 import toast from "../components/react-stacked-toast";
+import Container from "../components/Container.js";
+import Content from "../components/Content.js";
 import Header from "../components/Header.js";
 import Carousel from "../components/Carousel.js";
 import Nav from "../components/Nav.js";
@@ -39,7 +41,7 @@ function App() {
         search,
         page,
         ITEMS_PER_PAGE,
-        subgenderId,
+        subgenderId
       );
       setBooks(books);
       setTotalPages(totalPages);
@@ -160,13 +162,11 @@ function App() {
   }, [searchParams, currentPage]);
 
   return (
-    <>
-      <div className="bg-gray-100">
-        <div>
-          <Header />
-          <Carousel />
-        </div>
-        <Nav />
+    <Container className="bg-gray-100">
+      <Header />
+      <Carousel />
+      <Nav />
+      <Content>
         <section className="pt-10 p-5">
           {books ? (
             <List
@@ -204,13 +204,13 @@ function App() {
             <Loading text="Carregando livros..." />
           )}
         </section>
-      </div>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </Content>
 
       <Footer />
 
@@ -218,7 +218,7 @@ function App() {
         <div className="fixed bottom-6 right-5">
           <button
             type="button"
-            onClick={() => navigate('/new-book')}
+            onClick={() => navigate("/new-book")}
             className="flex items-center px-3 py-2 rounded-lg bg-slate-800 hover:brightness-125"
           >
             <span className="flex text-xl text-white">
@@ -228,7 +228,7 @@ function App() {
           </button>
         </div>
       )}
-    </>
+    </Container>
   );
 }
 

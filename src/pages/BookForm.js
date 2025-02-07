@@ -3,6 +3,8 @@ import { getBook, newBook, updateBook } from "../api/books/books.api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useBooks } from "../hooks/useBooks";
 import toast from "../components/react-stacked-toast";
+import Container from "../components/Container";
+import Content from "../components/Content";
 import Loading from "../components/Loading";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -102,12 +104,12 @@ const BookForm = () => {
         title: "Erro ao carregar detalhes adicionais do livro",
         description:
           "Encontramos um erro ao carregar os gêneros e subgêneros dos livros. Tente novamente ou  verifique sua conexão",
-        type: 'error',
+        type: "error",
         duration: 3000,
       });
       navigate("/");
     }
-  }, [error, navigate])
+  }, [error, navigate]);
 
   useEffect(() => {
     (async () => {
@@ -155,14 +157,17 @@ const BookForm = () => {
   useEffect(() => {
     if (bookForm.gender) {
       const genderId = parseInt(bookForm.gender);
-      const gender = bookGenders.find(gender => gender.id === genderId);
+      const gender = bookGenders.find((gender) => gender.id === genderId);
       gender && setBookSubgenders(gender.subgenders);
     }
   }, [bookForm.gender, bookGenders]);
 
   if (bookGendersLoading || !bookGenders) {
     return (
-      <div id="loading-info" className="flex flex-1 h-full w-full justify-center">
+      <div
+        id="loading-info"
+        className="flex flex-1 h-full w-full justify-center"
+      >
         <Loading text="Carregando informações..." />
       </div>
     );
@@ -173,10 +178,10 @@ const BookForm = () => {
   }
 
   return (
-    <div className="bg-gray-100">
+    <Container className="bg-gray-100">
       <Header />
       <Nav />
-      <div className="flex justify-center mt-10 pt-10">
+      <Content className="flex justify-center mt-10 pt-10">
         <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-6 text-center text-text">
             Adicionar Novo Livro
@@ -254,7 +259,10 @@ const BookForm = () => {
             <div className="mb-4">
               <SelectInput
                 label="Gênero"
-                options={bookGenders.map(gender => ({ label: gender.name, value: gender.id }))}
+                options={bookGenders.map((gender) => ({
+                  label: gender.name,
+                  value: gender.id,
+                }))}
                 value={bookForm.gender}
                 onChange={(e) => onChangeBookForm("gender", e.target.value)}
               />
@@ -263,7 +271,10 @@ const BookForm = () => {
             <div className="mb-4">
               <SelectInput
                 label="Subgênero"
-                options={bookSubgenders.map(subgender => ({ label: subgender.name, value: subgender.id }))}
+                options={bookSubgenders.map((subgender) => ({
+                  label: subgender.name,
+                  value: subgender.id,
+                }))}
                 value={bookForm.subgender}
                 onChange={(e) => onChangeBookForm("subgender", e.target.value)}
               />
@@ -354,9 +365,9 @@ const BookForm = () => {
             </button>
           </form>
         </div>
-      </div>
+      </Content>
       <Footer />
-    </div>
+    </Container>
   );
 };
 
