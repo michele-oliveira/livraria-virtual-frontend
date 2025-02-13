@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const Favorite = ({ bookId, image, hoverImage, title, onRemoveFromFavorites }) => {
   return (
     <div className="relative border p-4 text-center group bg-white rounded-md">
-      <Link to="./page.html">
+      <Link to={`/book/${bookId}`}>
         <div className="relative flex h-24 md:h-60 lg:h-64 xl:h-80 2xl:h-[24rem] items-center justify-center">
           <img
             className="block max-w-full max-h-full mx-auto transition-opacity duration-300 ease-in-out group-hover:opacity-0"
